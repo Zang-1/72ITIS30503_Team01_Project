@@ -1,0 +1,18 @@
+// Bảng Danh mục (Categories) - Có phân cấp Cha/Con
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String
+  slug      String     @unique
+  parentId  Int?       // Cột này dùng để xác định danh mục Cha 
+  parent    Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryHierarchy")
+  products  Product[]  // Quan hệ nhiều-nhiều với Sản phẩm
+}
+
+// Bảng Thẻ (Tags) - Cấu trúc phẳng 
+model Tag {
+  id        Int        @id @default(autoincrement())
+  name      String
+  slug      String     @unique
+  products  Product[]  
+}
