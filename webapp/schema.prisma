@@ -1,18 +1,63 @@
-// Bảng Danh mục (Categories) - Có phân cấp Cha/Con
-model Category {
-  id        Int        @id @default(autoincrement())
-  name      String
-  slug      String     @unique
-  parentId  Int?       // Cột này dùng để xác định danh mục Cha 
-  parent    Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
-  children  Category[] @relation("CategoryHierarchy")
-  products  Product[]  // Quan hệ nhiều-nhiều với Sản phẩm
+generator client {
+  provider = "prisma-client-js"
 }
 
-// Bảng Thẻ (Tags) - Cấu trúc phẳng 
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  name     String
+  email    String   @unique
+  password String
+  role     String   @default("Customer")
+  orders   Order[]
+}
+
+model Category {
+  id       Int        @id @default(autoincrement())
+  name     String
+  slug     String     @unique
+  parentId Int?
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryHierarchy")
+  products Product[]
+}
+
 model Tag {
-  id        Int        @id @default(autoincrement())
-  name      String
-  slug      String     @unique
-  products  Product[]  
+  id       Int       @id @default(autoincrement())
+  name     String
+  slug     String    @unique
+  products Product[]
+}
+
+model Product {
+  id         Int           @id @default(autoincrement())
+  title      String
+  price      Float
+  categoryId Int
+  category   Category      @relation(fields: [categoryId], references: [id])
+  tags       Tag[]
+  orders     OrderDetail[]
+}
+
+model Order {
+  id          Int           @id @default(autoincrement())
+  userId      Int
+  user        User          @relation(fields: [userId], references: [id])
+  totalAmount Float
+  status      String        @default("Pending")
+  products    OrderDetail[]
+}
+
+model OrderDetail {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  price     Float
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
 }
