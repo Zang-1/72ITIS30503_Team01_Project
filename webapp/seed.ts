@@ -28,19 +28,87 @@ async function main() {
     create: { name: 'Vợt Cầu Lông', slug: 'vot-cau-long', parentId: badminton.id },
   })
 
-  // 4. Tạo Danh mục Cha: Đồ Billiards
-  const billiards = await prisma.category.upsert({
-    where: { slug: 'do-billiards' },
-    update: {},
-    create: { name: 'Đồ Billiards', slug: 'do-billiards' },
-  })
+  // 6. Tạo 2 Simple Products (Phụ kiện tiêu hao)
+  await prisma.product.create({
+    data: {
+      title: 'Ống cầu lông Yonex AS-40',
+      slug: 'ong-cau-long-yonex-as-40',
+      description: 'Ống cầu lông cao cấp dành cho thi đấu.',
+      image: '/yonex-as-40.jpg',
+      imageAlt: 'Hình ảnh ống cầu lông Yonex AS-40 chính hãng',
+      price: 650000,
+      regularPrice: 650000,
+      sku: 'YNX-AS40',
+      stockStatus: 'In stock',
+      stockQty: 50,
+      categoryId: badminton.id,
+    }
+  });
 
-  // 5. Tạo Danh mục Con: Cơ Billiards
-  await prisma.category.upsert({
-    where: { slug: 'co-billiards' },
-    update: {},
-    create: { name: 'Cơ Billiards', slug: 'co-billiards', parentId: billiards.id },
-  })
+  await prisma.product.create({
+    data: {
+      title: 'Dây đan vợt Yonex BG65 Titanium',
+      slug: 'day-dan-vot-yonex-bg65ti',
+      description: 'Dây đan vợt siêu bền, độ nảy tốt.',
+      image: '/yonex-bg65ti.jpg',
+      imageAlt: 'Dây cước đan vợt cầu lông',
+      price: 150000,
+      regularPrice: 150000,
+      sku: 'YNX-BG65TI',
+      stockStatus: 'In stock',
+      stockQty: 100,
+      categoryId: badminton.id,
+    }
+  });
+
+  // 7. Tạo 1 Variable Product (Vợt cầu lông)
+  const variableProduct = await prisma.product.create({
+    data: {
+      title: 'Vợt cầu lông Yonex Astrox 88D chính hãng',
+      slug: 'vot-cau-long-yonex-astrox-88d',
+      description: 'Siêu phẩm tấn công dành cho dân chuyên.',
+      image: '/vot-cau-long-yonex.jpg',
+      imageAlt: 'Vợt cầu lông Yonex Astrox 88D',
+      price: 4250000,
+      categoryId: badminton.id,
+    }
+  });
+
+
+  // Tạo Attribute
+  const weightAttribute = await prisma.attribute.create({
+    data: {
+      name: 'Trọng lượng',
+      productId: variableProduct.id,
+    }
+  });
+
+  // Tạo Variation 1: 3U
+  await prisma.variation.create({
+    data: {
+      value: '3U',
+      sku: 'YNX-88D-3U',
+      regularPrice: 4250000,
+      stockStatus: 'In stock',
+      stockQty: 10,
+      productId: variableProduct.id,
+      attributeId: weightAttribute.id,
+    }
+  });
+
+  // Tạo Variation 2: 4U (Hết hàng)
+  await prisma.variation.create({
+    data: {
+      value: '4U',
+      sku: 'YNX-88D-4U',
+      regularPrice: 4250000,
+      stockStatus: 'Out of stock',
+      stockQty: 0,
+      productId: variableProduct.id,
+      attributeId: weightAttribute.id,
+    }
+  });
+
 
   console.log('--- Da bom du lieu mau (Seeder) thanh cong vao Database! ---')
 }
