@@ -3,6 +3,8 @@ const prisma = new PrismaClient()
 
 async function main() {
   // Dọn dẹp dữ liệu cũ để tránh xung đột khóa ngoại và rác dữ liệu
+  await prisma.variation.deleteMany({})
+  await prisma.attribute.deleteMany({})
   await prisma.orderItem.deleteMany({})
   await prisma.order.deleteMany({})
   await prisma.product.deleteMany({})
@@ -71,7 +73,7 @@ async function main() {
       title: 'Vợt Cầu Lông Yonex Astrox 100ZZ Kurenai',
       slug: 'vot-cau-long-yonex-astrox-100zz',
       price: 4890000,
-      imageUrl: '/Astrox 100zz VA.jpg',
+      imageUrl: '/vot-cau-long-yonex.jpg',
       description: 'Yonex Astrox 100ZZ Kurenai là cây vợt cao cấp nhất dòng Astrox, hướng đến lối chơi công thủ toàn diện cực kỳ linh hoạt. Thân vợt siêu cứng và đũa vợt mỏng giúp tối ưu hóa tốc độ vung vợt.',
       specifications: 'Độ cứng: Siêu cứng (Extra Stiff) | Trọng lượng: 3U/4U | Chu vi cán vợt: G5 | Điểm cân bằng: Nặng đầu (Head Heavy) | Xuất xứ: Nhật Bản',
       categoryId: votCauLong.id
