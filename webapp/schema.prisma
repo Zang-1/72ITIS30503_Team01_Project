@@ -13,7 +13,6 @@ model User {
   email    String   @unique
   password String
   role     String   @default("Customer")
-  orders   Order[]
 }
 
 model Category {
@@ -34,30 +33,39 @@ model Tag {
 }
 
 model Product {
-  id         Int           @id @default(autoincrement())
-  title      String
-  price      Float
-  categoryId Int
-  category   Category      @relation(fields: [categoryId], references: [id])
-  tags       Tag[]
-  orders     OrderDetail[]
+  id             Int         @id @default(autoincrement())
+  title          String
+  slug           String      @unique
+  price          Float
+  imageUrl       String?     @default("/vot-cau-long-yonex.jpg")
+  description    String?     @default("Mô tả sản phẩm đang cập nhật")
+  specifications String?     @default("Thông số kỹ thuật đang cập nhật")
+  categoryId     Int
+  category       Category    @relation(fields: [categoryId], references: [id])
+  tags           Tag[]
+  orderItems     OrderItem[]
 }
 
 model Order {
-  id          Int           @id @default(autoincrement())
-  userId      Int
-  user        User          @relation(fields: [userId], references: [id])
-  totalAmount Float
-  status      String        @default("Pending")
-  products    OrderDetail[]
+  id            String      @id
+  customerName  String
+  email         String
+  phone         String
+  address       String
+  paymentMethod String
+  status        String      @default("Pending")
+  total         Float
+  createdAt     DateTime    @default(now())
+  items         OrderItem[]
 }
 
-model OrderDetail {
-  id        Int     @id @default(autoincrement())
-  orderId   Int
-  productId Int
-  quantity  Int
-  price     Float
-  order     Order   @relation(fields: [orderId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
+model OrderItem {
+  id          Int      @id @default(autoincrement())
+  orderId     String
+  productId   Int
+  variationId Int?
+  quantity    Int
+  price       Float
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id])
 }
