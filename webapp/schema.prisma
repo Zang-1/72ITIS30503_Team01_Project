@@ -102,4 +102,3 @@ model Variation {
   attributeId  Int
   attribute    Attribute  @relation(fields: [attributeId], references: [id])
 }
-}
