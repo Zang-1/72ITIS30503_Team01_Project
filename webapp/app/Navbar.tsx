@@ -8,7 +8,6 @@ const categoryTree = [
   { id: 1, name: 'Đồ Cầu Lông', slug: 'do-cau-long', children: [{ id: 2, name: 'Vợt Cầu Lông', slug: 'vot-cau-long' }] },
   { id: 3, name: 'Đồ Tennis', slug: 'do-tennis', children: [{ id: 4, name: 'Vợt Tennis', slug: 'vot-tennis' }] }
 ];
-
 export default function Navbar() {
   const { totalItems, setIsOpen } = useCart();
   const [isBumped, setIsBumped] = useState(false);
@@ -34,8 +33,11 @@ export default function Navbar() {
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-zinc-300">
             <a href="/" className="hover:text-white transition-colors duration-200">Trang Chủ</a>
+            <a href="/shop" className="hover:text-white transition-colors duration-200">Cửa Hàng</a>
             <a href="/about" className="hover:text-white transition-colors duration-200">Giới Thiệu</a>
             <a href="/contact" className="hover:text-white transition-colors duration-200">Liên Hệ</a>
+            <a href="/account" className="hover:text-white transition-colors duration-200">Tài Khoản</a>
+            <a href="/admin" className="hover:text-white transition-colors duration-200 text-amber-500">Quản Trị</a>
             
             {/* Category Dropdowns */}
             {categoryTree.map((parent) => (

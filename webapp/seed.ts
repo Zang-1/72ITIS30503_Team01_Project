@@ -50,7 +50,7 @@ async function main() {
   })
 
   // 6. Tạo các Sản phẩm Mẫu
-  await prisma.product.upsert({
+  const variableProduct = await prisma.product.upsert({
     where: { slug: 'vot-cau-long-yonex-astrox-88d' },
     update: {},
     create: {
@@ -85,7 +85,7 @@ async function main() {
       title: 'Vợt Tennis Wilson Pro Staff 97 v14 Chính Hãng',
       slug: 'vot-tennis-wilson-pro-staff-97',
       price: 6250000,
-      imageUrl: '/vot-cau-long-yonex.jpg', // Dùng ảnh mẫu có sẵn làm fallback tạm thời hoặc ảnh tương tự
+      imageUrl: '/vot-cau-long-yonex.jpg',
       description: 'Vợt tennis Wilson Pro Staff 97 v14 chính hãng là dòng vợt chuyên nghiệp huyền thoại, mang lại cảm giác bóng cực tốt và độ chính xác tối đa trong từng cú đánh. Phiên bản v14 được nâng cấp với công nghệ Braid 45 nâng cao độ ổn định và uốn cong tối ưu.',
       specifications: 'Trọng lượng chưa đan dây: 315g | Mặt vợt: 97 sq.in. | Điểm cân bằng: 31cm | Mật độ dây: 16x19 | Chiều dài: 27 in | Độ cứng: 66 | Xuất xứ: USA/China',
       categoryId: votTennis.id
@@ -99,10 +99,42 @@ async function main() {
       title: 'Vợt Tennis Babolat Pure Aero 2023 Chính Hãng',
       slug: 'vot-tennis-babolat-pure-aero-2023',
       price: 5850000,
-      imageUrl: '/vot-cau-long-yonex.jpg', // Dùng ảnh mẫu có sẵn làm fallback tạm thời hoặc ảnh tương tự
+      imageUrl: '/vot-cau-long-yonex.jpg',
       description: 'Babolat Pure Aero 2023 chính hãng là dòng vợt tạo xoáy cực đỉnh được huyền thoại Rafael Nadal sử dụng. Vợt sở hữu khung khí động học Aero Modular3 giúp tăng tốc độ vung vợt và công nghệ NF2-Tech giúp giảm rung chấn hiệu quả.',
       specifications: 'Trọng lượng chưa đan dây: 300g | Mặt vợt: 100 sq.in. | Điểm cân bằng: 32cm | Mật độ dây: 16x19 | Chiều dài: 27 in | Độ cứng: 69 | Xuất xứ: Pháp/Trung Quốc',
       categoryId: votTennis.id
+    }
+  })
+
+  // Đảm bảo tạo Attribute và Variation để tương thích với các nhánh khác
+  const weightAttribute = await prisma.attribute.create({
+    data: {
+      name: 'Trọng lượng',
+      productId: variableProduct.id,
+    }
+  })
+
+  await prisma.variation.create({
+    data: {
+      value: '3U',
+      sku: 'YNX-88D-3U',
+      regularPrice: 4250000,
+      stockStatus: 'In stock',
+      stockQty: 10,
+      productId: variableProduct.id,
+      attributeId: weightAttribute.id,
+    }
+  })
+
+  await prisma.variation.create({
+    data: {
+      value: '4U',
+      sku: 'YNX-88D-4U',
+      regularPrice: 4250000,
+      stockStatus: 'Out of stock',
+      stockQty: 0,
+      productId: variableProduct.id,
+      attributeId: weightAttribute.id,
     }
   })
 

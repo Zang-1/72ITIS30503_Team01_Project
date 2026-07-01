@@ -8,11 +8,9 @@ export default async function HomePage() {
   const products = await prisma.product.findMany({
     orderBy: { id: 'asc' },
   });
-
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col">
       <Navbar />
-      
       <main className="flex-1 mx-auto max-w-7xl w-full px-6 py-10">
         {/* Hero Section */}
         <section className="mb-12 rounded-2xl bg-radial from-amber-600/10 via-transparent to-transparent border border-zinc-800 p-8 md:p-12 text-center md:text-left md:flex md:items-center md:justify-between">
