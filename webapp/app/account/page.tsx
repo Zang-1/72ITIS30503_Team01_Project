@@ -1,12 +1,12 @@
 import Navbar from '../Navbar';
 
 export default function AccountPage() {
-    return (
-        <div style={{ backgroundColor: '#0a0a0a', minHeight: '100vh', color: '#fff' }}>
-            <Navbar />
-            <main style={{ padding: '40px' }}>
-                <h1 style={{ color: '#fd7e14' }}>Đây là trang Tài Khoản (Account)</h1>
-            </main>
-        </div>
-    );
+  return (
+    <div style={{ backgroundColor: 'var(--bg-dark)', minHeight: '100vh', color: 'var(--text-white)' }}>
+      <Navbar />
+      <main style={{ padding: 'var(--main-padding)' }}>
+        <h1 style={{ color: 'var(--accent-orange)' }}>Đây là trang Tài Khoản (Account)</h1>
+      </main>
+    </div>
+  );
 }
