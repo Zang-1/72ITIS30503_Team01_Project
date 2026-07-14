@@ -56,20 +56,43 @@ async function main() {
 
   const tenSanPhamNgon = [
     'Vợt Cầu Lông Yonex Astrox 99', 'Vợt Cầu Lông Victor Thruster K', 'Vợt Cầu Lông Lining Aeronaut 9000',
-    'Vợt Yonex Nanoflare 800', 'Vợt Lining Calibar 900C', 'Vợt Victor DriveX 9X',
+    'Vợt Cầu Lông Yonex Nanoflare 800', 'Vợt Cầu Lông Lining Calibar 900C', 'Vợt Cầu Lông Victor DriveX 9X',
     'Vợt Tennis Wilson Pro Staff', 'Vợt Tennis Babolat Pure Drive', 'Vợt Tennis Head Speed',
     'Vợt Pickleball Joola', 'Vợt Pickleball Selkirk', 'Vợt Pickleball CRBN',
     'Giày Cầu Lông Yonex Eclipsion', 'Giày Cầu Lông Lining', 'Giày Cầu Lông Victor',
-    'Bao Vợt Yonex', 'Bóng Tennis Wilson', 'Bóng Pickleball Franklin', 'Lưới cầu lông Yonex'
+    'Bao Vợt Yonex Chính Hãng', 'Bóng Tennis Wilson Cao Cấp', 'Bóng Pickleball Franklin', 'Lưới Cầu Lông Yonex Tiêu Chuẩn',
+    'Quấn Cán Vợt Chống Trơn Yonex', 'Ống Cầu Lông Tiêu Chuẩn Thi Đấu'
   ]
 
 
+  function slugify(text: string): string {
+    return text
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/đ/g, 'd')
+      .replace(/Đ/g, 'D')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim();
+  }
+
   for (let i = 0; i < 30; i++) {
+    const baseTitle = faker.helpers.arrayElement(tenSanPhamNgon);
+    const suffix = faker.helpers.arrayElement(['Pro', 'Max', 'Elite', 'Tour', 'Lite', 'Plus', '']);
+    const title = suffix ? `${baseTitle} ${suffix}` : baseTitle;
+    
     await prisma.product.create({
       data: {
-        title: faker.helpers.arrayElement(tenSanPhamNgon),
-        price: parseFloat(faker.commerce.price({ min: 100, max: 2000 })),
+        title,
+        slug: `${slugify(title)}-${i + 1}`,
+        price: faker.number.int({ min: 50, max: 500 }) * 10000,
         categoryId: faker.helpers.arrayElement(categoryIds),
+        description: 'Sản phẩm thể thao chính hãng chất lượng cao, thiết kế tối ưu, giúp nâng cao hiệu suất thi đấu và trải nghiệm tuyệt vời cho người chơi ở mọi cấp độ.',
+        specifications: 'Chất liệu: Siêu nhẹ, bền bỉ | Bảo hành: 3 tháng chính hãng | Phù hợp: Tập luyện và thi đấu',
+        stockStatus: 'Còn hàng',
+        stockQty: faker.number.int({ min: 5, max: 100 }),
       },
     })
   }
