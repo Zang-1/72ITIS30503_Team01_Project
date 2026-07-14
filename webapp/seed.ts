@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client'
+import { faker } from '@faker-js/faker'
+
 const prisma = new PrismaClient()
 
 async function main() {
-  // 1. Tạo tài khoản Admin mẫu để test hệ thống
   await prisma.user.upsert({
     where: { email: 'admin@sportstore.com' },
     update: {},
@@ -14,35 +15,65 @@ async function main() {
     },
   })
 
-  // 2. Tạo Danh mục Cha: Đồ Cầu Lông
   const badminton = await prisma.category.upsert({
     where: { slug: 'do-cau-long' },
     update: {},
     create: { name: 'Đồ Cầu Lông', slug: 'do-cau-long' },
   })
 
-  // 3. Tạo Danh mục Con: Vợt Cầu Lông
-  await prisma.category.upsert({
+  const votCauLong = await prisma.category.upsert({
     where: { slug: 'vot-cau-long' },
     update: {},
     create: { name: 'Vợt Cầu Lông', slug: 'vot-cau-long', parentId: badminton.id },
   })
 
-  // 4. Tạo Danh mục Cha: Đồ Billiards
-  const billiards = await prisma.category.upsert({
-    where: { slug: 'do-billiards' },
+
+  const tennis = await prisma.category.upsert({
+    where: { slug: 'tennis' },
     update: {},
-    create: { name: 'Đồ Billiards', slug: 'do-billiards' },
+    create: { name: 'Tennis', slug: 'tennis' },
   })
 
-  // 5. Tạo Danh mục Con: Cơ Billiards
-  await prisma.category.upsert({
-    where: { slug: 'co-billiards' },
+  const votTennis = await prisma.category.upsert({
+    where: { slug: 'vot-tennis' },
     update: {},
-    create: { name: 'Cơ Billiards', slug: 'co-billiards', parentId: billiards.id },
+    create: { name: 'Vợt Tennis', slug: 'vot-tennis', parentId: tennis.id },
   })
 
-  console.log('--- Da bom du lieu mau (Seeder) thanh cong vao Database! ---')
+  const pickleball = await prisma.category.upsert({
+    where: { slug: 'pickleball' },
+    update: {},
+    create: { name: 'Pickleball', slug: 'pickleball' },
+  })
+
+  const votPickleball = await prisma.category.upsert({
+    where: { slug: 'vot-pickleball' },
+    update: {},
+    create: { name: 'Vợt Pickleball', slug: 'vot-pickleball', parentId: pickleball.id },
+  })
+
+  const categoryIds = [votCauLong.id, votTennis.id, votPickleball.id]
+
+  const tenSanPhamNgon = [
+    'Vợt Cầu Lông Yonex Astrox 99', 'Vợt Cầu Lông Victor Thruster K', 'Vợt Cầu Lông Lining Aeronaut 9000',
+    'Vợt Yonex Nanoflare 800', 'Vợt Lining Calibar 900C', 'Vợt Victor DriveX 9X',
+    'Vợt Tennis Wilson Pro Staff', 'Vợt Tennis Babolat Pure Drive', 'Vợt Tennis Head Speed',
+    'Vợt Pickleball Joola', 'Vợt Pickleball Selkirk', 'Vợt Pickleball CRBN',
+    'Giày Cầu Lông Yonex Eclipsion', 'Giày Cầu Lông Lining', 'Giày Cầu Lông Victor',
+    'Bao Vợt Yonex', 'Bóng Tennis Wilson', 'Bóng Pickleball Franklin', 'Lưới cầu lông Yonex'
+  ]
+
+
+  for (let i = 0; i < 30; i++) {
+    await prisma.product.create({
+      data: {
+        title: faker.helpers.arrayElement(tenSanPhamNgon),
+        price: parseFloat(faker.commerce.price({ min: 100, max: 2000 })),
+        categoryId: faker.helpers.arrayElement(categoryIds),
+      },
+    })
+  }
+
 }
 
 main()
