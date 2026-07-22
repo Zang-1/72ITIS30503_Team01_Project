@@ -10,6 +10,7 @@ interface Product {
   price: number;
   imageUrl: string | null;
   slug: string;
+  categorySlug: string;
 }
 
 interface HomeContentProps {
@@ -67,6 +68,7 @@ export default function HomeContent({ latestProducts, premiumProducts }: HomeCon
                 price={product.price}
                 imageUrl={product.imageUrl}
                 slug={product.slug}
+                categorySlug={product.categorySlug}
               />
             ))}
           </div>
@@ -86,6 +88,7 @@ export default function HomeContent({ latestProducts, premiumProducts }: HomeCon
                     price={product.price}
                     imageUrl={product.imageUrl}
                     slug={product.slug}
+                    categorySlug={product.categorySlug}
                   />
                 </div>
               </div>

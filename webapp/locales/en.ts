@@ -191,6 +191,11 @@ const en = {
   footer_connect: 'Connect With Us',
   footer_payment: 'Payment Methods',
   footer_copyright_text: '© 2026 SportStore. Elevate your passion. Built for the sports community.',
+  footer_hotline_label: 'Hotline',
+  footer_everyday: 'Everyday',
+  footer_about_desc: 'SportStore is Vietnam\'s leading sports equipment retailer, providing authentic products from top brands: Yonex, Victor, Lining, Wilson, Babolat, Head...',
+  footer_map_title: 'Store Location',
+  footer_address_value: '123 Sport Street, District 1, Ho Chi Minh City',
 };
 
 export default en;

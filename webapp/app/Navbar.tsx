@@ -61,7 +61,7 @@ export default function Navbar() {
           
           <div className="flex flex-col absolute top-full left-0 mt-3 bg-[#1a1a1a] border border-gray-700 rounded-lg p-3 min-w-max z-50 shadow-xl">
             {parent.children.map((child) => (
-              <a key={child.id} href={`/category/${child.slug}`} className="text-gray-300 hover:text-white py-1.5 px-2 hover:bg-gray-800 rounded transition-colors">
+              <a key={child.id} href={`/${child.slug}`} className="text-gray-300 hover:text-white py-1.5 px-2 hover:bg-gray-800 rounded transition-colors">
                 {t(child.nameKey)}
               </a>
             ))}

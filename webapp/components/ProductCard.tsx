@@ -11,11 +11,42 @@ interface ProductCardProps {
   price: number;
   imageUrl: string | null;
   slug: string;
+  categorySlug: string;
 }
 
-export default function ProductCard({ id, title, price, imageUrl, slug }: ProductCardProps) {
+// Dictionary dịch tên sản phẩm VN → EN
+const viToEnMap: Record<string, string> = {
+  'Vợt Cầu Lông': 'Badminton Racket',
+  'Vợt Tennis': 'Tennis Racket',
+  'Vợt Pickleball': 'Pickleball Paddle',
+  'Giày Cầu Lông': 'Badminton Shoes',
+  'Giày Tennis': 'Tennis Shoes',
+  'Quấn Cán Vợt': 'Racket Grip Tape',
+  'Ống Cầu Lông': 'Shuttlecock Tube',
+  'Bao Vợt': 'Racket Bag',
+  'Bóng Tennis': 'Tennis Ball',
+  'Bóng Pickleball': 'Pickleball Ball',
+  'Dây Căng Vợt': 'Racket String',
+  'Chính Hãng': 'Authentic',
+  'Cao Cấp': 'Premium',
+  'Tiêu Chuẩn Thi Đấu': 'Tournament Standard',
+  'Chống Trơn': 'Anti-Slip',
+};
+
+function translateTitle(text: string): string {
+  let result = text;
+  const sortedKeys = Object.keys(viToEnMap).sort((a, b) => b.length - a.length);
+  for (const vi of sortedKeys) {
+    result = result.replaceAll(vi, viToEnMap[vi]);
+  }
+  return result;
+}
+
+export default function ProductCard({ id, title, price, imageUrl, slug, categorySlug }: ProductCardProps) {
   const { addToCart } = useCart();
-  const { t } = useLanguage();
+  const { locale, t } = useLanguage();
+
+  const displayTitle = locale === 'en' ? translateTitle(title) : title;
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -28,7 +59,7 @@ export default function ProductCard({ id, title, price, imageUrl, slug }: Produc
     e.preventDefault(); // Prevent navigating to detail page if clicking the card
     addToCart({
       id,
-      title,
+      title: displayTitle,
       price,
       imageUrl: imageUrl || '/vot-cau-long-yonex.jpg',
     });
@@ -37,10 +68,10 @@ export default function ProductCard({ id, title, price, imageUrl, slug }: Produc
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/40 hover:bg-zinc-900 hover:border-zinc-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-amber-500/5">
       {/* Product Image */}
-      <Link href={`/product/${slug}`} className="block aspect-square w-full overflow-hidden bg-zinc-950">
+      <Link href={`/${categorySlug}/${slug}`} className="block aspect-square w-full overflow-hidden bg-zinc-950">
         <img
           src={imageUrl || '/vot-cau-long-yonex.jpg'}
-          alt={title}
+          alt={displayTitle}
           className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
         />
       </Link>
@@ -48,9 +79,9 @@ export default function ProductCard({ id, title, price, imageUrl, slug }: Produc
       {/* Product Info */}
       <div className="flex flex-1 flex-col p-4">
         <div className="mb-2">
-          <Link href={`/product/${slug}`}>
+          <Link href={`/${categorySlug}/${slug}`}>
             <h3 className="text-sm font-bold text-zinc-100 hover:text-amber-500 line-clamp-2 transition-colors duration-200 min-h-[40px]">
-              {title}
+              {displayTitle}
             </h3>
           </Link>
         </div>
@@ -64,7 +95,7 @@ export default function ProductCard({ id, title, price, imageUrl, slug }: Produc
           {/* Action Buttons */}
           <div className="flex gap-2">
             <Link
-              href={`/product/${slug}`}
+              href={`/${categorySlug}/${slug}`}
               className="flex-1 text-center px-3 py-2 border border-zinc-700 rounded-lg text-xs font-semibold text-zinc-300 hover:bg-zinc-800 hover:text-white transition-all"
             >
               {t('product_details')}
