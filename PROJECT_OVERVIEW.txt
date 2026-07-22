@@ -1,0 +1,739 @@
+================================================================================
+        TÀI LIỆU TỔNG QUAN DỰ ÁN - PROJECT OVERVIEW DOCUMENT
+        Mã dự án : 72ITIS30503_Team01_Project
+        Tạo lúc  : 20/07/2026
+================================================================================
+
+================================================================================
+1. THÔNG TIN CHUNG
+================================================================================
+
+Tên dự án   : SportStore - Cửa hàng thể thao trực tuyến B2C
+Thư mục gốc : 72ITIS30503_Team01_Project/
+Framework   : Next.js 16.2.6 (App Router)
+Ngôn ngữ    : TypeScript / TSX
+Database    : SQLite (file: dev.db) thông qua Prisma ORM 5.22
+CSS         : TailwindCSS v4 (PostCSS plugin)
+Runtime     : Node.js (Next.js full-stack)
+Mô tả       : Một ứng dụng web thương mại điện tử dạng B2C (Business-to-Customer)
+              chuyên bán thiết bị thể thao cho các môn Cầu Lông, Tennis và Pickleball.
+              Ứng dụng có đầy đủ tính năng từ hiển thị sản phẩm, giỏ hàng, thanh toán
+              cho đến bảng quản trị đơn hàng cho admin.
+
+================================================================================
+2. CẤU TRÚC THƯ MỤC DỰ ÁN
+================================================================================
+
+BaiTapLab1/
+├── 72ITIS30503_Team01_Project/         <- Thư mục dự án chính
+│   ├── .git/                           <- Git version control
+│   ├── backup_database.sql             <- File backup database SQL (65KB)
+│   └── webapp/                         <- Source code ứng dụng Next.js
+│       ├── app/                        <- Next.js App Router (trang & API)
+│       │   ├── Navbar.tsx              <- Component Navbar dùng chung
+│       │   ├── globals.css             <- CSS toàn cục
+│       │   ├── layout.tsx              <- Root Layout (bọc toàn bộ app)
+│       │   ├── page.tsx                <- Trang chủ (Home Page)
+│       │   ├── favicon.ico             <- Icon tab trình duyệt
+│       │   ├── account/
+│       │   │   └── page.tsx            <- Trang tài khoản (placeholder)
+│       │   ├── actions/
+│       │   │   ├── adminActions.ts     <- Server Actions cho admin
+│       │   │   └── checkout.ts         <- Server Action xử lý đặt hàng
+│       │   ├── admin/
+│       │   │   └── page.tsx            <- Trang quản trị đơn hàng
+│       │   ├── api/
+│       │   │   └── specifications/
+│       │   │       └── route.ts        <- Edge API trả thông số vợt (real-time)
+│       │   ├── cart/
+│       │   │   └── page.tsx            <- Trang giỏ hàng (full page)
+│       │   ├── category/
+│       │   │   └── [slug]/
+│       │   │       └── page.tsx        <- Trang danh mục động
+│       │   ├── checkout/
+│       │   │   └── page.tsx            <- Trang thanh toán (với mã giảm giá)
+│       │   ├── contact/
+│       │   │   └── page.tsx            <- Trang liên hệ
+│       │   ├── product/
+│       │   │   └── [slug]/
+│       │   │       ├── page.tsx        <- Trang chi tiết sản phẩm (SEO)
+│       │   │       └── ProductOptions.tsx <- Client component chọn biến thể
+│       │   └── shop/
+│       │       └── page.tsx            <- Trang danh sách danh mục thể thao
+│       ├── components/                 <- Shared UI Components
+│       │   ├── CartDrawer.tsx          <- Ngăn kéo giỏ hàng + form đặt hàng
+│       │   ├── ChatWidget.tsx          <- Widget chat hỗ trợ trực tuyến
+│       │   ├── ProductActions.tsx      <- Client component thêm vào giỏ hàng
+│       │   └── ProductCard.tsx         <- Card hiển thị sản phẩm
+│       ├── context/
+│       │   └── CartContext.tsx         <- React Context quản lý giỏ hàng
+│       ├── lib/
+│       │   └── prisma.ts               <- Singleton Prisma Client
+│       ├── migrations/
+│       │   └── 20260610061912_init_ecommerce_b2c/
+│       │       └── migration.sql       <- Migration SQL khởi tạo DB
+│       ├── public/                     <- Static assets
+│       │   ├── vot-cau-long-yonex.jpg        (Ảnh vợt Yonex - 67KB)
+│       │   ├── vot-cau-long-victor-thruster.jpg (Ảnh vợt Victor - 84KB)
+│       │   ├── vot-cau-long-lining.jpg       (Ảnh vợt Lining - 39KB)
+│       │   ├── file.svg, globe.svg, next.svg, vercel.svg, window.svg
+│       ├── dev.db                      <- SQLite database (116KB)
+│       ├── schema.prisma               <- Định nghĩa schema database
+│       ├── seed.ts                     <- Script seed dữ liệu mẫu
+│       ├── package.json                <- Dependencies & scripts
+│       ├── next.config.ts              <- Cấu hình Next.js
+│       ├── tsconfig.json               <- Cấu hình TypeScript
+│       ├── eslint.config.mjs           <- Cấu hình ESLint
+│       ├── postcss.config.mjs          <- Cấu hình PostCSS (TailwindCSS)
+│       ├── next-env.d.ts               <- TypeScript types cho Next.js
+│       ├── AGENTS.md                   <- Quy tắc cho AI coding agents
+│       ├── CLAUDE.md                   <- Quy tắc bổ sung cho Claude AI
+│       └── node_modules/               <- Packages (không commit)
+
+================================================================================
+3. CÔNG NGHỆ & DEPENDENCIES
+================================================================================
+
+--- DEPENDENCIES (Production) ---
+  @prisma/client : ^5.22.0  -> ORM client để tương tác với SQLite
+  next           : 16.2.6   -> Framework React full-stack (App Router)
+  react          : 19.2.4   -> Thư viện UI
+  react-dom      : 19.2.4   -> DOM rendering cho React
+
+--- DEV DEPENDENCIES ---
+  @faker-js/faker       : ^10.5.0  -> Sinh dữ liệu mẫu ngẫu nhiên (seed)
+  @tailwindcss/postcss  : ^4        -> Plugin PostCSS cho TailwindCSS
+  @types/node           : ^20       -> TypeScript types cho Node.js
+  @types/react          : ^19.2.17  -> TypeScript types cho React
+  @types/react-dom      : ^19       -> TypeScript types cho React DOM
+  eslint                : ^9        -> Linting code
+  eslint-config-next    : 16.2.6   -> ESLint config cho Next.js
+  prisma                : ^5.22.0   -> Prisma CLI (migration, generate, studio)
+  tailwindcss           : ^4        -> Framework CSS utility-first
+  tsx                   : ^4.23.1   -> TypeScript executor (chạy seed.ts)
+  typescript            : ^5        -> Ngôn ngữ lập trình
+
+--- NPM SCRIPTS ---
+  npm run dev   : Khởi chạy dev server (Next.js)
+  npm run build : Build production bundle
+  npm run start : Chạy production server
+  npm run lint  : Kiểm tra lỗi ESLint
+
+================================================================================
+4. CƠ SỞ DỮ LIỆU - DATABASE SCHEMA (Prisma / SQLite)
+================================================================================
+
+DATABASE PROVIDER: SQLite (file: ./dev.db)
+ORM: Prisma Client JS
+
+--- MODEL: User ---
+  id       : Int      (PK, auto-increment)
+  name     : String   (Họ tên)
+  email    : String   (Unique - Email đăng nhập)
+  password : String   (Mật khẩu - lưu plain text trong DB này)
+  role     : String   (Default: "Customer" | "Admin")
+
+--- MODEL: Category ---
+  id       : Int        (PK, auto-increment)
+  name     : String     (Tên danh mục: "Vợt Cầu Lông", "Tennis"...)
+  slug     : String     (Unique - URL slug: "vot-cau-long")
+  parentId : Int?       (FK tự tham chiếu -> id của Category cha)
+  parent   : Category?  (Quan hệ cha - CategoryHierarchy)
+  children : Category[] (Quan hệ con - CategoryHierarchy)
+  products : Product[]  (Các sản phẩm thuộc danh mục)
+
+  --> Hỗ trợ danh mục phân cấp 2 cấp (Parent -> Children)
+  Ví dụ: "Cầu Lông" (parent) -> "Vợt Cầu Lông", "Giày Cầu Lông" (children)
+
+--- MODEL: Tag ---
+  id       : Int      (PK, auto-increment)
+  name     : String   (Tên tag)
+  slug     : String   (Unique)
+  products : Product[] (Quan hệ many-to-many với Product)
+
+--- MODEL: Product ---
+  id            : Int         (PK, auto-increment)
+  title         : String      (Tên sản phẩm)
+  slug          : String      (Unique - URL slug)
+  price         : Float       (Giá cơ bản)
+  imageUrl      : String?     (Default: "/vot-cau-long-yonex.jpg")
+  description   : String?     (Mô tả sản phẩm)
+  specifications: String?     (Thông số kỹ thuật)
+  categoryId    : Int         (FK -> Category.id)
+  category      : Category    (Quan hệ nhiều-một)
+  tags          : Tag[]       (Quan hệ nhiều-nhiều)
+  orderItems    : OrderItem[] (Các mục đơn hàng liên quan)
+  -- Trường bổ sung (từ nhánh develop) --
+  image         : String?     (Ảnh URL thay thế)
+  imageAlt      : String?     (Alt text ảnh)
+  sku           : String?     (Unique - Mã SKU sản phẩm)
+  regularPrice  : Float?      (Giá gốc)
+  salePrice     : Float?      (Giá khuyến mãi)
+  stockStatus   : String      (Default: "In stock")
+  stockQty      : Int         (Default: 0 - Số lượng tồn kho)
+  attributes    : Attribute[] (Các thuộc tính sản phẩm)
+  variations    : Variation[] (Các biến thể sản phẩm)
+
+--- MODEL: Order ---
+  id            : String    (PK - Tự tạo theo format "ORD0001")
+  customerName  : String    (Tên khách hàng)
+  email         : String
+  phone         : String
+  address       : String
+  paymentMethod : String    ("COD" hoặc "Bank Transfer")
+  status        : String    (Default: "Pending" | "Processing" | "Completed")
+  total         : Float     (Tổng tiền đơn hàng)
+  createdAt     : DateTime  (Default: now())
+  items         : OrderItem[]
+
+--- MODEL: OrderItem ---
+  id          : Int     (PK, auto-increment)
+  orderId     : String  (FK -> Order.id, onDelete: Cascade)
+  productId   : Int     (FK -> Product.id)
+  variationId : Int?    (ID biến thể tùy chọn: 3 hoặc 4 cho 3U/4U)
+  quantity    : Int
+  price       : Float   (Giá tại thời điểm đặt hàng)
+
+--- MODEL: Attribute ---
+  id        : Int         (PK, auto-increment)
+  name      : String      (Tên thuộc tính: "Trọng lượng", "Độ cứng"...)
+  productId : Int         (FK -> Product.id)
+  product   : Product
+  variations: Variation[] (Các biến thể thuộc attribute này)
+
+--- MODEL: Variation ---
+  id           : Int       (PK, auto-increment)
+  value        : String    (Giá trị biến thể: "3U", "4U", "S", "M"...)
+  sku          : String    (Unique - Mã SKU biến thể)
+  regularPrice : Float?    (Giá gốc biến thể)
+  salePrice    : Float?    (Giá khuyến mãi biến thể)
+  stockStatus  : String    (Default: "In stock")
+  stockQty     : Int       (Default: 0)
+  productId    : Int       (FK -> Product.id)
+  attributeId  : Int       (FK -> Attribute.id)
+
+================================================================================
+5. KIẾN TRÚC & LUỒNG DỮ LIỆU
+================================================================================
+
+--- KIẾN TRÚC TỔNG QUAN ---
+  Client (Browser)
+      |
+      v
+  Next.js App Router
+      |-- Server Components (fetch data trực tiếp từ Prisma)
+      |-- Client Components (state, tương tác người dùng)
+      |-- Server Actions ('use server' - xử lý form/mutation)
+      |-- Edge API Routes (runtime: 'edge' - siêu nhanh)
+      |
+      v
+  Prisma ORM
+      |
+      v
+  SQLite Database (dev.db)
+
+--- RENDERING STRATEGY ---
+  - Trang chủ (/)         : Server Component (SSR - render server, fetch Prisma)
+  - Trang admin (/admin)  : Client Component (CSR - dùng Server Action)
+  - Trang sản phẩm       : Server Component + Client sub-components
+  - CartDrawer            : Client Component (state phức tạp)
+  - CartContext           : Client Context (localStorage persistence)
+
+--- LUỒNG MUA HÀNG ---
+  1. User duyệt sản phẩm trên trang chủ hoặc trang danh mục
+  2. Click "Thêm vào giỏ" -> addToCart() được gọi trong CartContext
+  3. CartDrawer tự động mở ra (isOpen = true)
+  4. User xem giỏ hàng, điều chỉnh số lượng, xóa sản phẩm
+  5. Click "Tiến hành đặt hàng" -> step chuyển sang 'checkout'
+  6. User điền form: Tên, Email, SĐT, Địa chỉ, Phương thức thanh toán
+  7. Validation phía client (regex phone VN, format email...)
+  8. Submit form -> gọi checkoutAction() (Server Action)
+  9. Server: tính tổng tiền, tạo OrderID (ORD0001...), lưu Order + OrderItems
+  10. Trả về kết quả, hiển thị màn hình thành công với mã đơn hàng
+  11. Cart được xóa sạch (clearCart)
+
+================================================================================
+6. MÔ TẢ CHI TIẾT TỪNG FILE QUAN TRỌNG
+================================================================================
+
+------------------------------------------------------------------------
+FILE: webapp/app/layout.tsx (Root Layout)
+------------------------------------------------------------------------
+Chức năng: Layout gốc bọc toàn bộ ứng dụng
+- Import font: Geist Sans + Geist Mono (Google Fonts)
+- Metadata SEO:
+    title: "SportStore - Nâng Tầm Đam Mê"
+    description: "Cửa hàng thể thao uy tín chuyên Cầu Lông, Tennis và Pickleball"
+- Bọc toàn bộ app trong <CartProvider> (cung cấp cart state)
+- Render <CartDrawer> (ngăn kéo giỏ hàng, luôn hiện ở mọi trang)
+- Render <ChatWidget> (widget chat hỗ trợ, luôn hiện ở mọi trang)
+- lang="vi" (ngôn ngữ Tiếng Việt)
+
+------------------------------------------------------------------------
+FILE: webapp/app/page.tsx (Trang chủ)
+------------------------------------------------------------------------
+Loại: Server Component (async)
+Chức năng: Trang chủ của cửa hàng
+- Fetch dữ liệu trực tiếp từ Prisma:
+    * latestProducts: 4 sản phẩm mới nhất (orderBy: id desc)
+    * premiumProducts: 4 sản phẩm đắt nhất (orderBy: price desc)
+- Giao diện gồm:
+    * Navbar
+    * Hero Section: Gradient text "Nâng Tầm Đam Mê Thể Thao", nút "Mua Ngay"
+    * Danh Mục (Grid 3 cột): Cầu Lông, Tennis, Pickleball (tĩnh)
+    * Sản Phẩm Mới Nhất: Render bằng <ProductCard>
+    * Sản Phẩm Cao Cấp: Render bằng <ProductCard> với hiệu ứng glow vàng
+    * Footer: Bản quyền, links
+
+------------------------------------------------------------------------
+FILE: webapp/app/Navbar.tsx (Navigation Bar)
+------------------------------------------------------------------------
+Loại: Server Component (không có state)
+Dữ liệu: Hard-coded categoryTree (3 danh mục cha + subcategories)
+  - Cầu Lông: Vợt CL, Giày CL, Balo CL, Tất CL, Phụ Kiện
+  - Tennis: Vợt Tennis, Giày Tennis, Bóng & Phụ Kiện
+  - PickleBall: Vợt PB, Bóng PB, Phụ Kiện
+- Hiển thị: Home | About | Contact | [Dropdown danh mục]
+- Dropdown dùng HTML <details> + <summary> (không cần JS)
+- Màu sắc: Nền #1a1a1a, text trắng, highlight cam #fd7e14
+
+------------------------------------------------------------------------
+FILE: webapp/components/ProductCard.tsx
+------------------------------------------------------------------------
+Loại: Client Component ('use client')
+Props: { id, title, price, imageUrl, slug }
+Chức năng: Card hiển thị sản phẩm
+- Định dạng giá VNĐ bằng Intl.NumberFormat
+- Click ảnh/tên -> Link đến /product/[slug]
+- Nút "Thêm" -> gọi addToCart() từ useCart()
+- Hiệu ứng hover: translateY, shadow
+- Hiệu ứng ảnh: scale-105 khi hover
+
+------------------------------------------------------------------------
+FILE: webapp/components/CartDrawer.tsx
+------------------------------------------------------------------------
+Loại: Client Component ('use client')
+Chức năng: Ngăn kéo giỏ hàng trượt từ phải sang trái
+- Quản lý 3 bước (step): 'cart' | 'checkout' | 'success'
+- STEP 1 - Cart: Hiển thị danh sách sản phẩm, điều chỉnh số lượng, xóa
+- STEP 2 - Checkout Form: Form nhập thông tin giao hàng
+    * Validation client-side:
+      - Họ tên: Không được rỗng
+      - Email: Regex /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      - SĐT: Regex /^0\d{9}$/ (10 số, bắt đầu bằng 0)
+      - Địa chỉ: Không được rỗng
+    * Phương thức thanh toán: COD hoặc Chuyển khoản
+    * Thông tin ngân hàng khi chọn Bank Transfer:
+      - Ngân hàng: ABC Bank
+      - Số TK: 123456789
+      - Tên TK: GROUP 1
+    * Tóm tắt đơn hàng với subtotal + shipping fee + grand total
+- STEP 3 - Success: Hiển thị mã đơn hàng, tổng tiền, trạng thái "Chờ xác nhận"
+- Gọi Server Action: checkoutAction()
+- Shipping fee logic: Đơn < 5.000.000đ phí 35.000đ, từ 5tr miễn phí
+
+------------------------------------------------------------------------
+FILE: webapp/components/ChatWidget.tsx
+------------------------------------------------------------------------
+Loại: Client Component ('use client')
+Chức năng: Widget chat hỗ trợ trực tuyến (góc phải dưới)
+- Nút cam tròn với icon chat
+- Cửa sổ chat 320x384px
+- Tin nhắn chào: "Xin chào! Chúng tôi có thể giúp gì cho bạn?"
+- Bot reply tự động sau 1 giây: "Cảm ơn bạn đã liên hệ, nhân viên sẽ phản hồi ngay lập tức!"
+- Hiệu ứng: Dot xanh nhấp nháy (animate-pulse) trên header
+
+------------------------------------------------------------------------
+FILE: webapp/components/ProductActions.tsx
+------------------------------------------------------------------------
+Loại: Client Component ('use client')
+Props: { id, title, price, imageUrl }
+Chức năng: UI thêm sản phẩm vào giỏ từ trang chi tiết
+- Chọn Weight: Radio button 3U hoặc 4U
+- Chọn Số lượng: Tăng/giảm với buttons +/-
+- Nút "Thêm Vào Giỏ Hàng" -> addToCart() với variationId = weight (3 hoặc 4)
+- Sau khi thêm: button đổi thành màu xanh "Đã Thêm Vào Giỏ!" trong 2 giây
+
+------------------------------------------------------------------------
+FILE: webapp/context/CartContext.tsx
+------------------------------------------------------------------------
+Loại: Client Context
+Export: CartProvider, useCart
+Interface CartItem:
+  { id, title, price, imageUrl, quantity, variationId? }
+
+Tính năng:
+- Persistence: Lưu/tải giỏ hàng từ localStorage key 'shopping-cart'
+- Hydration-safe: Dùng isHydrated state tránh SSR mismatch
+- addToCart(item, quantity=1): Nếu đã có (cùng id + variationId) thì tăng qty
+- removeFromCart(id, variationId?)
+- updateQuantity(id, quantity, variationId?): Nếu qty <= 0 thì xóa
+- clearCart(): Xóa toàn bộ giỏ
+- Computed values:
+    * totalItems: Tổng số lượng sản phẩm
+    * subtotal: Tổng tiền chưa ship
+    * shippingFee: 35.000đ nếu subtotal < 5.000.000đ, ngược lại = 0
+    * grandTotal: subtotal + shippingFee
+    * totalPrice: = subtotal (alias để tương thích ngược)
+
+------------------------------------------------------------------------
+FILE: webapp/app/actions/checkout.ts (Server Action)
+------------------------------------------------------------------------
+Directive: 'use server'
+Export: checkoutAction(data: CheckoutData)
+
+Luồng xử lý:
+  1. Validate: Kiểm tra đầy đủ các trường, items không rỗng
+  2. Tính tiền: subtotal, shippingFee (35k nếu < 5tr), totalAmount
+  3. Tạo OrderID: Đếm số đơn hiện tại, tìm ID kế tiếp dạng "ORD0001"
+     (thử tối đa 20 lần nếu trùng, fallback: ORD{timestamp})
+  4. Tạo Order: prisma.order.create() với nested items.create
+  5. Return: { success, orderId, totalAmount }
+
+------------------------------------------------------------------------
+FILE: webapp/app/actions/adminActions.ts (Server Actions)
+------------------------------------------------------------------------
+Directive: 'use server'
+Export:
+  - getOrdersAction(): Lấy tất cả đơn hàng, include items.product, sort desc
+  - updateOrderStatusAction(orderId, nextStatus):
+    * Chỉ chấp nhận: 'Pending' | 'Processing' | 'Completed'
+    * Cập nhật status bằng prisma.order.update()
+
+------------------------------------------------------------------------
+FILE: webapp/app/api/specifications/route.ts (Edge API)
+------------------------------------------------------------------------
+Runtime: 'edge' (chạy trên Vercel Edge Network, không có Prisma)
+Method: GET /api/specifications?slug=<product-slug>
+
+Trả về dữ liệu biến thể (trọng lượng vợt) dựa theo slug:
+  - vot-cau-long-yonex-astrox-88d:
+      3U: YNX-88D-3U (In stock, qty 10)
+      4U: YNX-88D-4U (Out of stock, qty 0)
+  - vot-cau-long-victor-thruster-fc:
+      3U: VCT-TF-3U (In stock, qty 5)
+      4U: VCT-TF-4U (In stock, qty 2)
+  - vot-cau-long-lining-aeronaut-9000c:
+      3U: LNING-9000C-3U (In stock, qty 15)
+      4U: LNING-9000C-4U (In stock, qty 8)
+  - Default (slug bất kỳ):
+      3U: GENERIC-3U (In stock, qty 10)
+      4U: GENERIC-4U (In stock, qty 10)
+
+Response: { timestamp: ISO string, specifications: [...] }
+
+------------------------------------------------------------------------
+FILE: webapp/app/admin/page.tsx (Trang Quản Trị)
+------------------------------------------------------------------------
+Loại: Client Component ('use client')
+Chức năng: Bảng quản trị đơn hàng theo dạng Kanban 3 cột
+
+- Gọi getOrdersAction() khi mount để load đơn hàng
+- Nhóm đơn theo status:
+    * Cột 1 (🟡 Chờ duyệt):   pendingOrders (status = 'Pending')
+    * Cột 2 (🔵 Đang xử lý): processingOrders (status = 'Processing')
+    * Cột 3 (🟢 Đã hoàn thành): completedOrders (status = 'Completed')
+- Mỗi OrderCard hiển thị:
+    * Mã đơn hàng (#ORD0001), thời gian đặt hàng
+    * Badge trạng thái màu sắc (vàng/xanh dương/xanh lá)
+    * Tên, SĐT, email, địa chỉ khách hàng
+    * Phương thức thanh toán (COD / Chuyển khoản)
+    * Danh sách sản phẩm + số lượng + giá
+    * Tổng thanh toán (màu vàng amber)
+    * Nút "Duyệt đơn ➔" (Pending -> Processing)
+    * Nút "Hoàn thành ➔" (Processing -> Completed)
+- Dùng useTransition để cập nhật status không block UI
+- Cập nhật local state ngay lập tức sau khi server confirm
+- Nút "🔄 Tải lại dữ liệu" để refresh danh sách
+
+------------------------------------------------------------------------
+FILE: webapp/app/product/[slug]/page.tsx (Trang Chi Tiết Sản Phẩm)
+------------------------------------------------------------------------
+Loại: Server Component (async)
+Chức năng: Trang chi tiết sản phẩm (tối ưu SEO)
+- generateMetadata(): Tạo thẻ <title> và <meta description> động
+- Dữ liệu sản phẩm (hiện tại dùng static data, chưa kết nối DB):
+    title: "Vợt Cầu Lông Yonex Astrox 88D Chính Hãng - Ultimate Offensive Masterpiece"
+    price: "4.250.000đ"
+    imageFile: "vot-cau-long-yonex.jpg"
+- Cấu trúc SEO:
+    * Duy nhất 1 thẻ H1 (tên sản phẩm)
+    * H2: Key Features
+    * H3: Specifications
+    * img alt chứa từ khóa: "Vợt cầu lông Yonex Astrox 88D chính hãng"
+
+------------------------------------------------------------------------
+FILE: webapp/app/product/[slug]/ProductOptions.tsx
+------------------------------------------------------------------------
+Loại: Client Component ("use client")
+Chức năng: Hiển thị tùy chọn biến thể sản phẩm (real-time từ Edge API)
+- useEffect: Fetch /api/specifications?slug={slug} khi component mount
+- Hiển thị radio buttons cho từng biến thể (3U / 4U)
+- Hiển thị thông tin SKU và tình trạng tồn kho
+- Màu sắc tình trạng: #28a745 (còn hàng) / #dc3545 (hết hàng)
+- Loading state: "⚡ Đang tải thông số từ Edge Runtime..."
+
+------------------------------------------------------------------------
+FILE: webapp/app/category/[slug]/page.tsx (Trang Danh Mục)
+------------------------------------------------------------------------
+Loại: Server Component (async)
+Params: slug (từ URL)
+Chức năng: Hiển thị sản phẩm theo danh mục
+- Hiện tại chỉ có điều kiện static:
+    * Nếu slug === 'vot-cau-long': Hiển thị 1 sản phẩm Yonex Astrox 88D
+    * Các slug khác: "No products found in this category."
+- Chưa kết nối Prisma để fetch động
+
+------------------------------------------------------------------------
+FILE: webapp/app/shop/page.tsx (Trang Shop)
+------------------------------------------------------------------------
+Loại: Server Component
+Chức năng: Trang chọn môn thể thao (landing page cho shop)
+- Hiển thị 2 danh mục dạng card lớn:
+    * Đồ Cầu Lông -> /category/vot-cau-long
+    * Đồ Tennis -> /category/vot-tennis
+- Mỗi card có ảnh minh họa, mô tả, nút "Khám phá ngay"
+- Style dùng inline styles (không dùng TailwindCSS)
+
+------------------------------------------------------------------------
+FILE: webapp/app/checkout/page.tsx (Trang Thanh Toán)
+------------------------------------------------------------------------
+Loại: Client Component ('use client')
+Chức năng: Trang thanh toán standalone (có tính năng mã giảm giá)
+- Lấy grandTotal từ useCart()
+- Form nhập: Tên, SĐT, Email, Địa chỉ
+- Nhập mã giảm giá:
+    * "XUAN2026": Giảm 10% tổng đơn hàng
+    * "LOGISTICFREE": Miễn phí vận chuyển (giảm 35.000đ)
+    * Mã khác: Hiển thị lỗi "❌ Mã giảm giá không hợp lệ"
+- Hiển thị: Tổng tiền, Giảm giá, Thành tiền, Ngày đặt hàng
+- Submit: alert("Đặt hàng thành công!") (chưa kết nối Server Action)
+
+------------------------------------------------------------------------
+FILE: webapp/app/cart/page.tsx (Trang Giỏ Hàng - Full Page)
+------------------------------------------------------------------------
+Loại: Client Component ('use client')
+Chức năng: Trang giỏ hàng đầy đủ (route /cart)
+- Hiển thị danh sách items từ CartContext
+- Điều chỉnh số lượng (+ / -)
+- Xóa sản phẩm
+- Hiển thị: Tạm tính, Phí vận chuyển, Tổng cộng
+- Link "Thanh toán" -> /checkout
+
+------------------------------------------------------------------------
+FILE: webapp/app/contact/page.tsx (Trang Liên Hệ)
+------------------------------------------------------------------------
+Loại: Server Component
+Chức năng: Trang thông tin liên hệ
+- Địa chỉ: 123 SportStore Avenue, District 1, Ho Chi Minh City
+- Email: support@sportstore.com
+- Hotline: +84 123 456 789
+- Chính sách giao hàng:
+    * Miễn phí cho đơn trên $500
+    * Giao hàng tiêu chuẩn 3-5 ngày làm việc
+    * Giao hàng nhanh cho khu vực được chọn
+    * Đổi trả trong 14 ngày
+
+------------------------------------------------------------------------
+FILE: webapp/app/account/page.tsx (Trang Tài Khoản)
+------------------------------------------------------------------------
+Loại: Server Component
+Chức năng: Placeholder đơn giản, hiển thị "Đây là trang Tài Khoản (Account)"
+(Chưa được phát triển đầy đủ)
+
+------------------------------------------------------------------------
+FILE: webapp/lib/prisma.ts (Prisma Singleton)
+------------------------------------------------------------------------
+Chức năng: Khởi tạo PrismaClient singleton pattern
+- Tránh tạo nhiều connection trong development (hot reload)
+- Dùng globalThis để cache instance
+- Chỉ cache trong development (NODE_ENV !== 'production')
+
+------------------------------------------------------------------------
+FILE: webapp/seed.ts (Seed Script)
+------------------------------------------------------------------------
+Chức năng: Nhồi dữ liệu mẫu vào database
+Chạy bằng: npx tsx seed.ts
+
+Dữ liệu được tạo:
+  USER:
+    - Admin Giang (admin@sportstore.com / password123 / role: Admin)
+
+  CATEGORIES (phân cấp 2 cấp):
+    - Đồ Cầu Lông (do-cau-long)
+        └── Vợt Cầu Lông (vot-cau-long)
+    - Tennis (tennis)
+        └── Vợt Tennis (vot-tennis)
+    - Pickleball (pickleball)
+        └── Vợt Pickleball (vot-pickleball)
+
+  PRODUCTS: 30 sản phẩm ngẫu nhiên dùng @faker-js/faker
+    - Tên: Kết hợp từ 21 tên sản phẩm cố định + suffix (Pro/Max/Elite/Tour/Lite/Plus)
+    - Slug: slugify(title) + "-{i+1}" (đảm bảo unique)
+    - Giá: Random 50-500 * 10.000đ (= 500.000đ - 5.000.000đ)
+    - Category: Random trong [vot-cau-long, vot-tennis, vot-pickleball]
+    - Stock: Random 5-100 sản phẩm
+    - Description & Specifications: Text chuẩn
+
+================================================================================
+7. CÁC TRANG & ROUTES
+================================================================================
+
+  URL                       | Loại  | File                              | Mô tả
+  --------------------------|-------|-----------------------------------|------------------
+  /                         | SSR   | app/page.tsx                      | Trang chủ
+  /shop                     | SSR   | app/shop/page.tsx                 | Chọn môn thể thao
+  /category/[slug]          | SSR   | app/category/[slug]/page.tsx      | Danh mục sản phẩm
+  /product/[slug]           | SSR   | app/product/[slug]/page.tsx       | Chi tiết sản phẩm
+  /cart                     | CSR   | app/cart/page.tsx                 | Giỏ hàng full page
+  /checkout                 | CSR   | app/checkout/page.tsx             | Trang thanh toán
+  /contact                  | SSR   | app/contact/page.tsx              | Liên hệ
+  /account                  | SSR   | app/account/page.tsx              | Tài khoản (WIP)
+  /admin                    | CSR   | app/admin/page.tsx                | Quản trị đơn hàng
+  /api/specifications?slug= | EDGE  | app/api/specifications/route.ts   | API biến thể vợt
+
+  SSR = Server-Side Rendering | CSR = Client-Side Rendering | EDGE = Edge Runtime
+
+================================================================================
+8. TÍNH NĂNG ĐÃ HOÀN THIỆN
+================================================================================
+
+  ✅ Trang chủ với Hero Section, danh mục và sản phẩm động từ DB
+  ✅ Navbar với dropdown danh mục (HTML details/summary)
+  ✅ ProductCard: Hiển thị sản phẩm, link đến trang chi tiết, thêm vào giỏ
+  ✅ Giỏ hàng (CartContext) với localStorage persistence
+  ✅ CartDrawer: Ngăn kéo 3 bước (xem giỏ -> điền thông tin -> thành công)
+  ✅ Validation form đặt hàng phía client (tên, email regex, SĐT Việt Nam regex)
+  ✅ Server Action checkoutAction: Lưu đơn hàng vào SQLite qua Prisma
+  ✅ Tạo OrderID tự động theo format ORD0001, ORD0002...
+  ✅ Logic phí vận chuyển: 35.000đ (dưới 5tr), miễn phí (từ 5tr)
+  ✅ Hỗ trợ 2 phương thức thanh toán: COD và Chuyển khoản ngân hàng
+  ✅ Trang Admin dạng Kanban: Chờ duyệt -> Đang xử lý -> Hoàn thành
+  ✅ Cập nhật trạng thái đơn hàng real-time (không reload trang)
+  ✅ Edge API /api/specifications trả dữ liệu biến thể vợt
+  ✅ ProductOptions: Chọn biến thể (3U/4U) với thông tin tồn kho real-time
+  ✅ ProductActions: Chọn weight + số lượng trước khi thêm vào giỏ
+  ✅ SEO: generateMetadata() cho trang sản phẩm
+  ✅ ChatWidget: Widget chat hỗ trợ (bot reply tự động)
+  ✅ Trang contact với thông tin liên hệ và chính sách giao hàng
+  ✅ Trang checkout standalone với tính năng mã giảm giá (XUAN2026, LOGISTICFREE)
+  ✅ Seed script tạo 30 sản phẩm mẫu ngẫu nhiên
+
+================================================================================
+9. TÍNH NĂNG CHƯA HOÀN THIỆN / TODO
+================================================================================
+
+  ❌ Trang /account: Chỉ là placeholder, chưa có tính năng
+  ❌ Trang /category/[slug]: Dữ liệu static, chưa fetch từ DB động
+  ❌ Trang /product/[slug]: Dữ liệu static, chưa fetch từ DB theo slug
+  ❌ Hệ thống xác thực người dùng (Login / Register / Session)
+  ❌ Phân quyền Admin (trang /admin hiện ai cũng truy cập được)
+  ❌ Trang /shop: Chỉ có 2 danh mục, chưa load từ DB
+  ❌ Navbar: Category tree hard-coded, chưa fetch từ DB
+  ❌ Tích hợp thanh toán thực (VNPAY, MoMo, Stripe...)
+  ❌ Chức năng tìm kiếm sản phẩm
+  ❌ Phân trang (pagination) cho danh sách sản phẩm
+  ❌ Chức năng lọc và sắp xếp sản phẩm
+  ❌ Hệ thống đánh giá / review sản phẩm
+  ❌ Theo dõi đơn hàng cho khách hàng
+  ❌ Upload ảnh sản phẩm
+
+================================================================================
+10. DESIGN SYSTEM & UI
+================================================================================
+
+--- Màu sắc chính ---
+  Nền tối chính : #000000 / bg-zinc-950 / bg-black
+  Nền component : #1a1a1a / bg-zinc-900
+  Nền card      : bg-zinc-900/40
+  Viền          : border-zinc-800 / border-gray-800
+  Text chính    : text-white / text-zinc-100
+  Text phụ      : text-zinc-400 / text-gray-400
+  Accent cam    : #fd7e14 / #f97316 (orange-500/600)
+  Accent vàng   : #f59e0b (amber-500) -> giá tiền, CTA chính
+  Thành công    : #10b981 (emerald-500) -> nút xác nhận đơn
+  Lỗi           : #ef4444 (red-500)
+  Xanh dương    : #3b82f6 (blue-400) -> đơn đang xử lý
+
+--- Typography ---
+  Font chính : Geist Sans (Google Fonts)
+  Font mono  : Geist Mono
+  Tiếng Việt : UTF-8, có dấu
+
+--- Responsive ---
+  Grid sản phẩm trang chủ: 1 -> 2 -> 4 cột (mobile -> tablet -> desktop)
+  Admin Kanban: 1 -> 3 cột
+  CartDrawer: max-w-md (384px)
+  Container: max-w-6xl mx-auto
+
+================================================================================
+11. BIẾN MÔI TRƯỜNG & CẤU HÌNH
+================================================================================
+
+  File .gitignore bao gồm: .next/, node_modules/, *.env, dev.db
+  Database URL: file:./dev.db (relative path, hardcoded trong schema.prisma)
+  Không có .env file trong dự án (DB URL là SQLite local)
+  Next.js config (next.config.ts): Rỗng, không có cấu hình đặc biệt
+  TailwindCSS v4: Dùng @tailwindcss/postcss plugin (khác v3)
+  TypeScript: strict mode (tsconfig.json)
+
+================================================================================
+12. GHI CHÚ KỸ THUẬT QUAN TRỌNG
+================================================================================
+
+  1. Next.js 16.x có breaking changes so với Next.js 13/14/15
+     -> Đọc node_modules/next/dist/docs/ trước khi code (theo AGENTS.md)
+
+  2. TailwindCSS v4 thay đổi cú pháp so với v3:
+     -> Dùng @tailwindcss/postcss thay vì tailwindcss plugin cũ
+     -> Không có tailwind.config.js (v4 auto-detect)
+
+  3. Prisma với SQLite: Không hỗ trợ Edge Runtime
+     -> API route /api/specifications dùng Edge Runtime nên KHÔNG thể dùng Prisma
+     -> Trang admin và checkout dùng Server Components/Actions (Node.js runtime)
+
+  4. CartDrawer xử lý cả view cart + checkout trong 1 component
+     -> Trang /checkout là separate page dùng cho coupon code feature
+
+  5. variationId trong CartItem là number (3 hoặc 4) tương ứng 3U/4U
+     -> Không phải ID từ DB Variation model
+
+  6. Mật khẩu trong DB lưu plain text (không hash)
+     -> Chỉ phù hợp cho môi trường học tập, KHÔNG dùng production
+
+  7. Không có authentication middleware
+     -> Bất kỳ ai cũng có thể truy cập /admin
+
+  8. OrderID được tạo tuần tự (ORD0001...) không phải UUID
+     -> Có race condition tiềm ẩn trong môi trường concurrent
+
+================================================================================
+13. LỆNH THƯỜNG DÙNG
+================================================================================
+
+  # Chạy development server
+  cd webapp
+  npm run dev
+
+  # Seed dữ liệu mẫu
+  cd webapp
+  npx tsx seed.ts
+
+  # Prisma - Tạo migration mới
+  npx prisma migrate dev --name <ten_migration>
+
+  # Prisma - Apply migration (production)
+  npx prisma migrate deploy
+
+  # Prisma - Mở Prisma Studio (UI quản lý DB)
+  npx prisma studio
+
+  # Prisma - Generate client sau khi thay đổi schema
+  npx prisma generate
+
+  # Build production
+  npm run build
+
+================================================================================
+        END OF DOCUMENT - Tài liệu này được tự động tạo ngày 20/07/2026
+================================================================================

@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function ChatWidget() {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<{text: string, isUser: boolean}[]>([
-    { text: 'Xin chào! Chúng tôi có thể giúp gì cho bạn?', isUser: false }
+  const [messages, setMessages] = useState<{text: string, isUser: boolean, key: string}[]>([
+    { text: '', isUser: false, key: 'greeting' }
   ]);
   const [inputValue, setInputValue] = useState('');
 
@@ -14,13 +16,19 @@ export default function ChatWidget() {
     if (!inputValue.trim()) return;
     
     // Add user message
-    setMessages(prev => [...prev, { text: inputValue, isUser: true }]);
+    setMessages(prev => [...prev, { text: inputValue, isUser: true, key: '' }]);
     setInputValue('');
     
     // Fake bot response after 1s
     setTimeout(() => {
-      setMessages(prev => [...prev, { text: 'Cảm ơn bạn đã liên hệ, nhân viên sẽ phản hồi ngay lập tức!', isUser: false }]);
+      setMessages(prev => [...prev, { text: '', isUser: false, key: 'bot_reply' }]);
     }, 1000);
+  };
+
+  const getMessageText = (msg: {text: string, isUser: boolean, key: string}) => {
+    if (msg.key === 'greeting') return t('chat_greeting');
+    if (msg.key === 'bot_reply') return t('chat_bot_reply');
+    return msg.text;
   };
 
   return (
@@ -44,7 +52,7 @@ export default function ChatWidget() {
           <div className="bg-orange-500 p-4 flex justify-between items-center text-white">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <h3 className="font-bold">Hỗ Trợ Trực Tuyến</h3>
+              <h3 className="font-bold">{t('chat_support')}</h3>
             </div>
             <button onClick={() => setIsOpen(false)} className="hover:text-zinc-200">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -56,7 +64,7 @@ export default function ChatWidget() {
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[80%] p-3 rounded-lg text-sm ${msg.isUser ? 'bg-orange-500 text-white rounded-tr-none' : 'bg-zinc-800 text-zinc-200 rounded-tl-none'}`}>
-                  {msg.text}
+                  {getMessageText(msg)}
                 </div>
               </div>
             ))}
@@ -68,7 +76,7 @@ export default function ChatWidget() {
               type="text" 
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Nhập tin nhắn..." 
+              placeholder={t('chat_placeholder')} 
               className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-orange-500"
             />
             <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-lg transition-colors">

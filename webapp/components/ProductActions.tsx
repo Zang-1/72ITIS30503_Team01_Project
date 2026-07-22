@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface ProductActionsProps {
   id: number;
@@ -12,6 +13,7 @@ interface ProductActionsProps {
 
 export default function ProductActions({ id, title, price, imageUrl }: ProductActionsProps) {
   const { addToCart } = useCart();
+  const { t } = useLanguage();
   const [quantity, setQuantity] = useState(1);
   const [weight, setWeight] = useState<number>(3); // 3 for 3U, 4 for 4U
   const [added, setAdded] = useState(false);
@@ -40,7 +42,7 @@ export default function ProductActions({ id, title, price, imageUrl }: ProductAc
     <div className="mt-8 space-y-6">
       {/* Weight Selector */}
       <div className="flex items-center gap-4">
-        <span className="text-sm font-semibold text-zinc-400 w-24">Phân loại (Weight):</span>
+        <span className="text-sm font-semibold text-zinc-400 w-24">{t('product_weight')}</span>
         <div className="flex items-center gap-3">
           <label className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 cursor-pointer text-xs font-semibold text-zinc-300 transition-colors">
             <input
@@ -69,7 +71,7 @@ export default function ProductActions({ id, title, price, imageUrl }: ProductAc
 
       {/* Quantity Selector */}
       <div className="flex items-center gap-4">
-        <span className="text-sm font-semibold text-zinc-400 w-24">Số lượng:</span>
+        <span className="text-sm font-semibold text-zinc-400 w-24">{t('product_quantity')}</span>
         <div className="flex items-center border border-zinc-800 rounded-lg bg-zinc-900 overflow-hidden">
           <button
             type="button"
@@ -106,14 +108,14 @@ export default function ProductActions({ id, title, price, imageUrl }: ProductAc
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
               </svg>
-              Đã Thêm Vào Giỏ!
+              {t('product_added_to_cart')}
             </>
           ) : (
             <>
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth="1.8" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
               </svg>
-              Thêm Vào Giỏ Hàng
+              {t('product_add_to_cart')}
             </>
           )}
         </button>

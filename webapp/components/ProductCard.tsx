@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useCart } from '@/context/CartContext';
+import { useLanguage } from '@/context/LanguageContext';
 import Link from 'next/link';
 
 interface ProductCardProps {
@@ -14,6 +15,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ id, title, price, imageUrl, slug }: ProductCardProps) {
   const { addToCart } = useCart();
+  const { t } = useLanguage();
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -65,7 +67,7 @@ export default function ProductCard({ id, title, price, imageUrl, slug }: Produc
               href={`/product/${slug}`}
               className="flex-1 text-center px-3 py-2 border border-zinc-700 rounded-lg text-xs font-semibold text-zinc-300 hover:bg-zinc-800 hover:text-white transition-all"
             >
-              Chi tiết
+              {t('product_details')}
             </Link>
             <button
               onClick={handleAdd}
@@ -74,7 +76,7 @@ export default function ProductCard({ id, title, price, imageUrl, slug }: Produc
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
               </svg>
-              Thêm
+              {t('product_add')}
             </button>
           </div>
         </div>
