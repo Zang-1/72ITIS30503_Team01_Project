@@ -42,15 +42,6 @@ export default function ContactPage() {
           </div>
         </div>
       </main>
-
-      <footer className="bg-[#1a1a1a] text-center p-6 border-t border-gray-800 mt-auto">
-        <p className="text-gray-500">{t('footer_copyright')}</p>
-        <div className="mt-2 space-x-4">
-          <a href="#" className="text-gray-400 hover:text-white">{t('footer_privacy')}</a>
-          <a href="#" className="text-gray-400 hover:text-white">{t('footer_terms')}</a>
-          <a href="/contact" className="text-orange-500 hover:text-orange-400">{t('footer_contact')}</a>
-        </div>
-      </footer>
     </div>
   );
 }

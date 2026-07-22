@@ -174,6 +174,23 @@ const vi = {
   nav_racket_pickleball: 'Vợt PickleBall',
   nav_ball_pickleball: 'Bóng PickleBall',
   nav_accessories_pickleball: 'Phụ Kiện',
+  footer_about_us: 'Về chúng tôi',
+  footer_address: 'Địa chỉ',
+  footer_email: 'Email',
+  footer_phone: 'Điện thoại',
+  footer_working_hours: 'Giờ làm việc',
+  footer_policies: 'Chính Sách',
+  footer_return_policy: 'Chính sách đổi trả',
+  footer_warranty_policy: 'Chính sách bảo hành',
+  footer_shipping_policy: 'Chính sách giao hàng',
+  footer_privacy_policy: 'Bảo mật thông tin',
+  footer_support: 'Hỗ Trợ Khách Hàng',
+  footer_buying_guide: 'Hướng dẫn mua hàng',
+  footer_racket_guide: 'Hướng dẫn chọn vợt',
+  footer_order_tracking: 'Kiểm tra đơn hàng',
+  footer_connect: 'Kết Nối Với Chúng Tôi',
+  footer_payment: 'Phương Thức Thanh Toán',
+  footer_copyright_text: '© 2026 SportStore. Nâng tầm đam mê. Được xây dựng cho cộng đồng thể thao Việt Nam.',
 };
 
 export default vi;
