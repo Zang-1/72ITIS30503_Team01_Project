@@ -2,44 +2,48 @@
 
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
+import ProductCard from '@/components/ProductCard';
 
-interface CategoryContentProps {
+interface Product {
+  id: number;
+  title: string;
+  price: number;
+  imageUrl: string | null;
   slug: string;
 }
 
-export default function CategoryContent({ slug }: CategoryContentProps) {
+interface CategoryContentProps {
+  categoryName: string;
+  products: Product[];
+}
+
+export default function CategoryContent({ categoryName, products }: CategoryContentProps) {
   const { t } = useLanguage();
 
   return (
-    <div className="p-10 max-w-5xl">
-      <h1 className="text-3xl font-bold text-[#fd7e14] mb-2">
-        {t('category_page_title')}
+    <div className="p-10 max-w-6xl mx-auto flex-grow">
+      <h1 className="text-3xl font-bold text-orange-500 mb-2 border-l-4 border-orange-500 pl-4">
+        {categoryName}
       </h1>
       <p className="text-gray-400 mb-10">
-        {t('category_label')} {slug}
+        {t('category_label')} {categoryName}
       </p>
 
       {/* Danh sách sản phẩm của Danh mục */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {slug === 'vot-cau-long' ? (
-          <a href="/product/yonex-astrox-88d" className="block bg-[#1a1a1a] border border-gray-800 rounded-lg overflow-hidden flex flex-col hover:border-gray-600 transition-colors cursor-pointer">
-            <img 
-              src="/vot-cau-long-yonex.jpg" 
-              alt="Vợt Cầu Lông Yonex Astrox 88D" 
-              className="w-full h-64 object-cover"
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {products.length > 0 ? (
+          products.map(product => (
+            <ProductCard 
+              key={product.id}
+              id={product.id}
+              title={product.title}
+              price={product.price}
+              imageUrl={product.imageUrl}
+              slug={product.slug}
             />
-            <div className="p-4 flex flex-col flex-grow">
-              <h3 className="text-lg font-bold text-white mb-2">
-                Vợt Cầu Lông Yonex Astrox 88D Chính Hãng
-              </h3>
-              <p className="text-[#28a745] font-bold mb-4">4.250.000đ</p>
-              <div className="mt-auto bg-[#fd7e14] text-white text-center py-2 rounded font-bold">
-                {t('product_view_details')}
-              </div>
-            </div>
-          </a>
+          ))
         ) : (
-          <div className="col-span-full text-gray-500">
+          <div className="col-span-full text-center py-20 text-gray-500 bg-zinc-900 rounded-xl border border-zinc-800">
             {t('category_no_products')}
           </div>
         )}

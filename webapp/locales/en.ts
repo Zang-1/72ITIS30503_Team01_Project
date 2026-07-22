@@ -174,6 +174,23 @@ const en = {
   nav_racket_pickleball: 'PickleBall Paddle',
   nav_ball_pickleball: 'PickleBall Ball',
   nav_accessories_pickleball: 'Accessories',
+  footer_about_us: 'About Us',
+  footer_address: 'Address',
+  footer_email: 'Email',
+  footer_phone: 'Phone',
+  footer_working_hours: 'Working Hours',
+  footer_policies: 'Policies',
+  footer_return_policy: 'Return Policy',
+  footer_warranty_policy: 'Warranty Policy',
+  footer_shipping_policy: 'Shipping Policy',
+  footer_privacy_policy: 'Privacy Policy',
+  footer_support: 'Customer Support',
+  footer_buying_guide: 'Buying Guide',
+  footer_racket_guide: 'Racket Guide',
+  footer_order_tracking: 'Order Tracking',
+  footer_connect: 'Connect With Us',
+  footer_payment: 'Payment Methods',
+  footer_copyright_text: '© 2026 SportStore. Elevate your passion. Built for the sports community.',
 };
 
 export default en;
