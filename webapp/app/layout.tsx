@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
+import { LanguageProvider } from "@/context/LanguageContext";
 import CartDrawer from "@/components/CartDrawer";
 import ChatWidget from "@/components/ChatWidget";
 
@@ -32,9 +33,11 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <CartProvider>
-          {children}
-          <CartDrawer />
-          <ChatWidget />
+          <LanguageProvider>
+            {children}
+            <CartDrawer />
+            <ChatWidget />
+          </LanguageProvider>
         </CartProvider>
       </body>
     </html>

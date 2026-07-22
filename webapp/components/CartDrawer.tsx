@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { checkoutAction } from '@/app/actions/checkout';
 
 export default function CartDrawer() {
@@ -16,6 +17,8 @@ export default function CartDrawer() {
     shippingFee,
     grandTotal,
   } = useCart();
+
+  const { t } = useLanguage();
 
   const [step, setStep] = useState<'cart' | 'checkout' | 'success'>('cart');
   const [formData, setFormData] = useState({
@@ -49,14 +52,14 @@ export default function CartDrawer() {
     const selectedPaymentMethod = formData.paymentMethod;
 
     if (!trimmedName) {
-      setErrorMessage('Họ và tên không được để trống.');
+      setErrorMessage(t('validate_name_required'));
       setIsSubmitting(false);
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(trimmedEmail)) {
-      setErrorMessage('Email không đúng định dạng (Ví dụ: user@example.com).');
+      setErrorMessage(t('validate_email_invalid'));
       setIsSubmitting(false);
       return;
     }
@@ -64,13 +67,13 @@ export default function CartDrawer() {
     // Kiểm tra định dạng số điện thoại Việt Nam (10 chữ số, bắt đầu bằng số 0)
     const phoneRegex = /^0\d{9}$/;
     if (!phoneRegex.test(trimmedPhone)) {
-      setErrorMessage('Số điện thoại không hợp lệ (Phải có 10 chữ số và bắt đầu bằng số 0).');
+      setErrorMessage(t('validate_phone_invalid'));
       setIsSubmitting(false);
       return;
     }
 
     if (!trimmedAddress) {
-      setErrorMessage('Địa chỉ nhận hàng không được để trống.');
+      setErrorMessage(t('validate_address_required'));
       setIsSubmitting(false);
       return;
     }
@@ -99,11 +102,11 @@ export default function CartDrawer() {
         clearCart();
         setFormData({ name: '', email: '', phone: '', address: '', paymentMethod: 'COD' });
       } else {
-        setErrorMessage(result.error || 'Đã xảy ra lỗi khi đặt hàng.');
+        setErrorMessage(result.error || t('error_checkout'));
       }
     } catch (err) {
       console.error(err);
-      setErrorMessage('Không thể kết nối đến máy chủ.');
+      setErrorMessage(t('error_server'));
     } finally {
       setIsSubmitting(false);
     }
@@ -134,9 +137,9 @@ export default function CartDrawer() {
             {/* Header */}
             <div className="flex items-start justify-between p-6 border-b border-zinc-800">
               <h2 className="text-xl font-bold tracking-wide text-amber-500" id="slide-over-title">
-                {step === 'cart' && 'Giỏ Hàng Của Bạn'}
-                {step === 'checkout' && 'Thông Tin Giao Hàng'}
-                {step === 'success' && 'Đặt Hàng Thành Công!'}
+                {step === 'cart' && t('cart_your_cart')}
+                {step === 'checkout' && t('checkout_shipping_info')}
+                {step === 'success' && t('success_title')}
               </h2>
               <div className="ml-3 flex h-7 items-center">
                 <button
@@ -145,7 +148,7 @@ export default function CartDrawer() {
                   disabled={isSubmitting}
                   className="relative -m-2 p-2 text-zinc-400 hover:text-white transition-colors duration-200"
                 >
-                  <span className="sr-only">Đóng</span>
+                  <span className="sr-only">{t('cart_close')}</span>
                   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                   </svg>
@@ -164,12 +167,12 @@ export default function CartDrawer() {
                       <svg className="h-16 w-16 text-zinc-600 mb-4 animate-bounce" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                       </svg>
-                      <p className="text-zinc-400 font-medium">Giỏ hàng của bạn đang trống.</p>
+                      <p className="text-zinc-400 font-medium">{t('cart_empty')}</p>
                       <button
                         onClick={() => setIsOpen(false)}
                         className="mt-6 px-6 py-2.5 bg-amber-600 text-white rounded-lg hover:bg-amber-500 font-semibold tracking-wide transition-all duration-200"
                       >
-                        Tiếp tục mua sắm
+                        {t('cart_continue_shopping')}
                       </button>
                     </div>
                   ) : (
@@ -222,7 +225,7 @@ export default function CartDrawer() {
                                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                   </svg>
-                                  <span>Xóa</span>
+                                  <span>{t('cart_remove')}</span>
                                 </button>
                               </div>
                             </div>
@@ -245,7 +248,7 @@ export default function CartDrawer() {
 
                   <div>
                     <label htmlFor="name" className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1">
-                      Họ và Tên <span className="text-red-500">*</span>
+                      {t('checkout_name')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -254,14 +257,14 @@ export default function CartDrawer() {
                       required
                       value={formData.name}
                       onChange={handleInputChange}
-                      placeholder="Nguyễn Văn A"
+                      placeholder={t('checkout_name_placeholder')}
                       className="w-full rounded-lg border border-zinc-800 bg-zinc-900 p-2.5 text-sm text-white placeholder-zinc-500 focus:outline-hidden focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
                     />
                   </div>
 
                   <div>
                     <label htmlFor="email" className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1">
-                      Địa chỉ Email <span className="text-red-500">*</span>
+                      {t('checkout_email')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
@@ -270,14 +273,14 @@ export default function CartDrawer() {
                       required
                       value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="anguyen@gmail.com"
+                      placeholder={t('checkout_email_placeholder')}
                       className="w-full rounded-lg border border-zinc-800 bg-zinc-900 p-2.5 text-sm text-white placeholder-zinc-500 focus:outline-hidden focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
                     />
                   </div>
 
                   <div>
                     <label htmlFor="phone" className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1">
-                      Số Điện Thoại <span className="text-red-500">*</span>
+                      {t('checkout_phone')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="tel"
@@ -286,14 +289,14 @@ export default function CartDrawer() {
                       required
                       value={formData.phone}
                       onChange={handleInputChange}
-                      placeholder="0912345678"
+                      placeholder={t('checkout_phone_placeholder')}
                       className="w-full rounded-lg border border-zinc-800 bg-zinc-900 p-2.5 text-sm text-white placeholder-zinc-500 focus:outline-hidden focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
                     />
                   </div>
 
                   <div>
                     <label htmlFor="address" className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-1">
-                      Địa chỉ nhận hàng <span className="text-red-500">*</span>
+                      {t('checkout_address')} <span className="text-red-500">*</span>
                     </label>
                     <textarea
                       name="address"
@@ -302,14 +305,14 @@ export default function CartDrawer() {
                       rows={3}
                       value={formData.address}
                       onChange={handleInputChange}
-                      placeholder="Số nhà, Tên đường, Phường/Xã, Quận/Huyện, Tỉnh/Thành phố..."
+                      placeholder={t('checkout_address_placeholder')}
                       className="w-full rounded-lg border border-zinc-800 bg-zinc-900 p-2.5 text-sm text-white placeholder-zinc-500 focus:outline-hidden focus:ring-1 focus:ring-amber-500 focus:border-amber-500 resize-none"
                     />
                   </div>
 
                   <div>
                     <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">
-                      Phương thức thanh toán <span className="text-red-500">*</span>
+                      {t('checkout_payment_method')} <span className="text-red-500">*</span>
                     </label>
                     <div className="space-y-2">
                       <label className="flex items-center gap-3 p-3 rounded-lg border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-900 cursor-pointer transition-colors">
@@ -322,8 +325,8 @@ export default function CartDrawer() {
                           className="text-amber-500 focus:ring-amber-500 focus:ring-offset-zinc-950 bg-zinc-950 border-zinc-800 cursor-pointer"
                         />
                         <div className="text-sm">
-                          <span className="block font-semibold text-white">Thanh toán khi nhận hàng (COD)</span>
-                          <span className="block text-xs text-zinc-500">Thanh toán bằng tiền mặt khi giao hàng tận nơi.</span>
+                          <span className="block font-semibold text-white">{t('checkout_cod')}</span>
+                          <span className="block text-xs text-zinc-500">{t('checkout_cod_desc')}</span>
                         </div>
                       </label>
 
@@ -337,8 +340,8 @@ export default function CartDrawer() {
                           className="text-amber-500 focus:ring-amber-500 focus:ring-offset-zinc-950 bg-zinc-950 border-zinc-800 cursor-pointer"
                         />
                         <div className="text-sm">
-                          <span className="block font-semibold text-white">Chuyển khoản ngân hàng trực tiếp</span>
-                          <span className="block text-xs text-zinc-500">Chuyển khoản tới tài khoản ngân hàng của cửa hàng.</span>
+                          <span className="block font-semibold text-white">{t('checkout_bank')}</span>
+                          <span className="block text-xs text-zinc-500">{t('checkout_bank_desc')}</span>
                         </div>
                       </label>
                     </div>
@@ -346,17 +349,17 @@ export default function CartDrawer() {
 
                   {formData.paymentMethod === 'Bank Transfer' && (
                     <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5 text-xs space-y-2 animate-fade-in">
-                      <h4 className="font-bold text-amber-500 uppercase tracking-wider mb-1">Thông tin chuyển khoản ngân hàng:</h4>
+                      <h4 className="font-bold text-amber-500 uppercase tracking-wider mb-1">{t('checkout_bank_info')}</h4>
                       <div className="flex justify-between border-b border-zinc-800 pb-1.5">
-                        <span className="text-zinc-400">Ngân hàng (Bank):</span>
+                        <span className="text-zinc-400">{t('checkout_bank_name')}</span>
                         <strong className="text-white">ABC Bank</strong>
                       </div>
                       <div className="flex justify-between border-b border-zinc-800 pb-1.5">
-                        <span className="text-zinc-400">Số tài khoản (Account):</span>
+                        <span className="text-zinc-400">{t('checkout_account_number')}</span>
                         <strong className="text-white">123456789</strong>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-zinc-400">Tên tài khoản (Name):</span>
+                        <span className="text-zinc-400">{t('checkout_account_name')}</span>
                         <strong className="text-white">GROUP 1</strong>
                       </div>
                     </div>
@@ -364,7 +367,7 @@ export default function CartDrawer() {
 
                   {/* Order Summary inside Checkout */}
                   <div className="mt-6 rounded-lg bg-zinc-900 p-4 border border-zinc-800">
-                    <h4 className="text-xs font-semibold uppercase text-zinc-400 mb-2">Tóm tắt đơn hàng</h4>
+                    <h4 className="text-xs font-semibold uppercase text-zinc-400 mb-2">{t('checkout_order_summary')}</h4>
                     <div className="space-y-1.5 text-xs text-zinc-300">
                       {items.map((item) => (
                         <div key={`${item.id}-${item.variationId || 'none'}`} className="flex justify-between">
@@ -376,15 +379,15 @@ export default function CartDrawer() {
                       ))}
                       <div className="pt-2 mt-2 border-t border-zinc-800 space-y-1.5 text-xs">
                         <div className="flex justify-between text-zinc-450">
-                          <span>Tạm tính (Subtotal):</span>
+                          <span>{t('checkout_subtotal')}</span>
                           <span>{formatCurrency(subtotal)}</span>
                         </div>
                         <div className="flex justify-between text-zinc-450">
-                          <span>Phí vận chuyển (Shipping):</span>
-                          <span>{shippingFee === 0 ? 'Miễn phí' : formatCurrency(shippingFee)}</span>
+                          <span>{t('checkout_shipping')}</span>
+                          <span>{shippingFee === 0 ? t('cart_free_shipping') : formatCurrency(shippingFee)}</span>
                         </div>
                         <div className="flex justify-between font-bold text-sm text-white pt-2 border-t border-zinc-800 mt-1">
-                          <span>Tổng cộng (Grand Total):</span>
+                          <span>{t('checkout_grand_total')}</span>
                           <span className="text-amber-500">{formatCurrency(grandTotal)}</span>
                         </div>
                       </div>
@@ -401,22 +404,22 @@ export default function CartDrawer() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">Đã nhận được đơn hàng!</h3>
+                  <h3 className="text-lg font-bold text-white mb-2">{t('success_message')}</h3>
                   <p className="text-sm text-zinc-400 max-w-xs mb-6">
-                    Cảm ơn bạn đã mua hàng tại hệ thống. Đơn hàng của bạn đang được xử lý.
+                    {t('success_description')}
                   </p>
                   
                   <div className="w-full rounded-lg bg-zinc-900 p-4 border border-zinc-800 text-left text-xs mb-8 space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-zinc-400">Mã đơn hàng (Order ID):</span>
+                      <span className="text-zinc-400">{t('success_order_id')}</span>
                       <strong className="text-white">#{placedOrderInfo.id}</strong>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-zinc-400">Trạng thái:</span>
-                      <span className="px-2 py-0.5 rounded-full bg-amber-950 text-amber-400 border border-amber-800 text-[10px] font-semibold">Chờ xác nhận</span>
+                      <span className="text-zinc-400">{t('success_status')}</span>
+                      <span className="px-2 py-0.5 rounded-full bg-amber-950 text-amber-400 border border-amber-800 text-[10px] font-semibold">{t('success_status_pending')}</span>
                     </div>
                     <div className="flex justify-between pt-1 border-t border-zinc-800 font-bold">
-                      <span className="text-zinc-300">Tổng thanh toán:</span>
+                      <span className="text-zinc-300">{t('success_total_payment')}</span>
                       <span className="text-amber-500">{formatCurrency(placedOrderInfo.total)}</span>
                     </div>
                   </div>
@@ -428,7 +431,7 @@ export default function CartDrawer() {
                     }}
                     className="w-full px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white text-sm font-semibold rounded-lg transition-all"
                   >
-                    Tiếp tục mua sắm
+                    {t('cart_continue_shopping')}
                   </button>
                 </div>
               )}
@@ -442,15 +445,15 @@ export default function CartDrawer() {
                   <>
                     <div className="space-y-2 mb-6 text-sm">
                       <div className="flex justify-between text-zinc-400">
-                        <span>Tạm tính (Subtotal):</span>
+                        <span>{t('cart_subtotal')}</span>
                         <span>{formatCurrency(subtotal)}</span>
                       </div>
                       <div className="flex justify-between text-zinc-400">
-                        <span>Phí vận chuyển (Shipping):</span>
-                        <span>{shippingFee === 0 ? 'Miễn phí' : formatCurrency(shippingFee)}</span>
+                        <span>{t('cart_shipping')}</span>
+                        <span>{shippingFee === 0 ? t('cart_free_shipping') : formatCurrency(shippingFee)}</span>
                       </div>
                       <div className="flex justify-between text-base font-bold text-white pt-2 border-t border-zinc-800 mt-1">
-                        <span>Tổng cộng (Grand Total):</span>
+                        <span>{t('cart_grand_total')}</span>
                         <span className="text-lg text-amber-500">{formatCurrency(grandTotal)}</span>
                       </div>
                     </div>
@@ -459,13 +462,13 @@ export default function CartDrawer() {
                         onClick={() => setStep('checkout')}
                         className="w-full flex items-center justify-center rounded-lg bg-amber-600 px-6 py-3.5 text-base font-bold text-white shadow-sm hover:bg-amber-500 transition-all duration-200"
                       >
-                        Tiến hành đặt hàng
+                        {t('cart_proceed_checkout')}
                       </button>
                       <button
                         onClick={clearCart}
                         className="w-full py-2.5 text-xs text-zinc-400 hover:text-zinc-200 transition-colors"
                       >
-                        Xóa toàn bộ giỏ hàng
+                        {t('cart_clear_all')}
                       </button>
                     </div>
                   </>
@@ -479,14 +482,14 @@ export default function CartDrawer() {
                       disabled={isSubmitting}
                       className="w-full flex items-center justify-center rounded-lg bg-emerald-600 px-6 py-3.5 text-base font-bold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50 transition-all duration-200"
                     >
-                      {isSubmitting ? 'Đang xử lý đặt hàng...' : 'Xác Nhận Đặt Hàng'}
+                      {isSubmitting ? t('checkout_submitting') : t('checkout_submit')}
                     </button>
                     <button
                       onClick={() => setStep('cart')}
                       disabled={isSubmitting}
                       className="w-full py-2.5 text-xs text-zinc-400 hover:text-zinc-200 transition-colors"
                     >
-                      Quay lại giỏ hàng
+                      {t('checkout_back_to_cart')}
                     </button>
                   </div>
                 )}

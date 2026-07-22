@@ -1,22 +1,27 @@
+'use client';
+
 import React from 'react';
 import Navbar from '../Navbar';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function ShopPage() {
+  const { t } = useLanguage();
+
   const categories = [
     {
       id: 1,
-      name: 'Đồ Cầu Lông',
+      nameKey: 'shop_badminton' as const,
       slug: 'vot-cau-long',
-      image: '/vot-cau-long-yonex.jpg', // Dùng tạm ảnh vợt
-      description: 'Khám phá các dòng vợt và phụ kiện cầu lông chuyên nghiệp, mang đến độ chính xác tuyệt đối.'
+      image: '/vot-cau-long-yonex.jpg',
+      descKey: 'shop_badminton_desc' as const,
     },
     {
       id: 2,
-      name: 'Đồ Tennis',
+      nameKey: 'shop_tennis' as const,
       slug: 'vot-tennis',
-      image: '/vot-cau-long-yonex.jpg', // Dùng tạm ảnh
-      description: 'Cung cấp vợt tennis và trang phục thể thao chất lượng cao cho các tay vợt.'
+      image: '/vot-cau-long-yonex.jpg',
+      descKey: 'shop_tennis_desc' as const,
     }
   ];
 
@@ -25,10 +30,10 @@ export default function ShopPage() {
       <Navbar />
       <main style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
         <h1 style={{ color: '#fd7e14', fontSize: '2rem', marginBottom: '10px', textAlign: 'center' }}>
-          Chọn Môn Thể Thao Của Bạn
+          {t('shop_title')}
         </h1>
         <p style={{ color: '#aaa', marginBottom: '40px', textAlign: 'center' }}>
-          Bạn đang tìm kiếm thiết bị cho môn thể thao nào?
+          {t('shop_subtitle')}
         </p>
 
         {/* Lưới danh mục */}
@@ -53,20 +58,20 @@ export default function ShopPage() {
                 <div style={{ position: 'relative', height: '250px', backgroundColor: '#222', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
                   <img 
                     src={cat.image} 
-                    alt={cat.name} 
+                    alt={t(cat.nameKey)} 
                     style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', borderRadius: '8px' }} 
                   />
                 </div>
                 
                 {/* Thông tin danh mục */}
                 <div style={{ padding: '30px' }}>
-                  <h3 style={{ fontSize: '24px', margin: '0 0 15px 0', color: '#fd7e14' }}>{cat.name}</h3>
-                  <p style={{ color: '#aaa', fontSize: '15px', lineHeight: '1.6', margin: '0 0 25px 0' }}>{cat.description}</p>
+                  <h3 style={{ fontSize: '24px', margin: '0 0 15px 0', color: '#fd7e14' }}>{t(cat.nameKey)}</h3>
+                  <p style={{ color: '#aaa', fontSize: '15px', lineHeight: '1.6', margin: '0 0 25px 0' }}>{t(cat.descKey)}</p>
                   
                   <button style={{ 
                     width: '100%', padding: '15px', backgroundColor: '#fd7e14', color: '#000', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px'
                   }}>
-                    Khám phá ngay
+                    {t('shop_explore')}
                   </button>
                 </div>
               </div>

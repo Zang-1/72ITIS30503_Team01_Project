@@ -3,6 +3,7 @@
 import Navbar from '../Navbar';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function CartPage() {
   const {
@@ -13,6 +14,8 @@ export default function CartPage() {
     shippingFee,
     grandTotal,
   } = useCart();
+
+  const { t } = useLanguage();
 
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat('vi-VN', {
@@ -27,11 +30,11 @@ export default function CartPage() {
       <div className="max-w-6xl mx-auto p-8">
 
         <h1 className="text-3xl font-bold text-amber-500 mb-8">
-          Giỏ hàng
+          {t('cart_title')}
         </h1>
 
         {items.length === 0 ? (
-          <p>Giỏ hàng đang trống.</p>
+          <p>{t('cart_empty_page')}</p>
         ) : (
           <>
             {items.map(item => (
@@ -79,7 +82,7 @@ export default function CartPage() {
                     className="text-red-500 mt-2"
                     onClick={() => removeFromCart(item.id)}
                   >
-                    Xóa
+                    {t('cart_remove')}
                   </button>
 
                 </div>
@@ -89,21 +92,21 @@ export default function CartPage() {
             <div className="mt-8 border-t border-zinc-700 pt-6">
 
               <p>
-                Tạm tính:
+                {t('cart_subtotal')}
                 <strong className="ml-2">
                   {formatCurrency(subtotal)}
                 </strong>
               </p>
 
               <p>
-                Phí vận chuyển:
+                {t('cart_shipping')}
                 <strong className="ml-2">
                   {formatCurrency(shippingFee)}
                 </strong>
               </p>
 
               <p className="text-2xl mt-3">
-                Tổng cộng:
+                {t('cart_grand_total')}
                 <strong className="text-amber-500 ml-2">
                   {formatCurrency(grandTotal)}
                 </strong>
@@ -113,7 +116,7 @@ export default function CartPage() {
                 href="/checkout"
                 className="inline-block mt-6 bg-amber-500 text-black px-6 py-3 rounded-lg font-bold"
               >
-                Thanh toán
+                {t('cart_checkout')}
               </Link>
 
             </div>

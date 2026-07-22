@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import Navbar from '../../Navbar';
+import ProductDetailContent from '@/components/ProductDetailContent';
 
 // 1. Dữ liệu sản phẩm (Có đầy đủ thông tin chuẩn SEO)
 async function getProductBySlug() {
@@ -34,39 +35,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   return (
     <div className="min-h-screen bg-black text-white font-sans">
       <Navbar />
-      <article className="p-10 max-w-4xl">
-        {/* Luật của thầy: Duy nhất 1 thẻ H1 trên trang */}
-        <h1 className="text-3xl font-bold text-[#fd7e14] mb-4">
-          {product.name}
-        </h1>
-        
-        <p className="text-xl font-bold text-[#28a745] mb-6">
-          Price: {product.price}
-        </p>
-
-        {/* Luật của thầy: Thẻ ảnh lấy đúng tên file và có alt chứa từ khóa */}
-        <img 
-          src={`/${product.imageFile}`} 
-          alt="Vợt cầu lông Yonex Astrox 88D chính hãng" 
-          className="max-w-md w-full mb-8 rounded border border-gray-700" 
-        />
-
-        {/* Phân cấp nhỏ hơn phải dùng H2, rồi tới H3 */}
-        <h2 className="text-2xl font-bold text-[#ffc107] mb-3">
-          Key Features
-        </h2>
-        <p className="text-gray-300 mb-8 leading-relaxed">
-          {product.content}
-        </p>
-
-        <h3 className="text-xl font-bold text-[#17a2b8] mb-3">
-          Specifications
-        </h3>
-        <ul className="list-disc ml-6 text-gray-300 space-y-2">
-          <li>Stiffness: Stiff</li>
-          <li>Weight: 4U</li>
-        </ul>
-      </article>
+      <ProductDetailContent
+        name={product.name}
+        price={product.price}
+        imageFile={product.imageFile}
+        content={product.content}
+      />
     </div>
   );
 }
