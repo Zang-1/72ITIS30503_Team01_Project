@@ -25,6 +25,7 @@ export default async function HomePage() {
       price: p.price,
       imageUrl: p.imageUrl,
       slug: p.slug,
+      categorySlug: p.category?.slug || 'danh-muc-mac-dinh',
     }));
 
   return (

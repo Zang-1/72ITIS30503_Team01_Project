@@ -11,9 +11,10 @@ interface ProductCardProps {
   price: number;
   imageUrl: string | null;
   slug: string;
+  categorySlug: string;
 }
 
-export default function ProductCard({ id, title, price, imageUrl, slug }: ProductCardProps) {
+export default function ProductCard({ id, title, price, imageUrl, slug, categorySlug }: ProductCardProps) {
   const { addToCart } = useCart();
   const { t } = useLanguage();
 
@@ -37,7 +38,7 @@ export default function ProductCard({ id, title, price, imageUrl, slug }: Produc
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/40 hover:bg-zinc-900 hover:border-zinc-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-amber-500/5">
       {/* Product Image */}
-      <Link href={`/product/${slug}`} className="block aspect-square w-full overflow-hidden bg-zinc-950">
+      <Link href={`/product/${categorySlug}/${slug}`} className="block aspect-square w-full overflow-hidden bg-zinc-950">
         <img
           src={imageUrl || '/vot-cau-long-yonex.jpg'}
           alt={title}
@@ -48,7 +49,7 @@ export default function ProductCard({ id, title, price, imageUrl, slug }: Produc
       {/* Product Info */}
       <div className="flex flex-1 flex-col p-4">
         <div className="mb-2">
-          <Link href={`/product/${slug}`}>
+          <Link href={`/product/${categorySlug}/${slug}`}>
             <h3 className="text-sm font-bold text-zinc-100 hover:text-amber-500 line-clamp-2 transition-colors duration-200 min-h-[40px]">
               {title}
             </h3>
@@ -64,7 +65,7 @@ export default function ProductCard({ id, title, price, imageUrl, slug }: Produc
           {/* Action Buttons */}
           <div className="flex gap-2">
             <Link
-              href={`/product/${slug}`}
+              href={`/product/${categorySlug}/${slug}`}
               className="flex-1 text-center px-3 py-2 border border-zinc-700 rounded-lg text-xs font-semibold text-zinc-300 hover:bg-zinc-800 hover:text-white transition-all"
             >
               {t('product_details')}

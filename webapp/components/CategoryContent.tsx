@@ -10,6 +10,7 @@ interface Product {
   price: number;
   imageUrl: string | null;
   slug: string;
+  categorySlug: string;
 }
 
 interface CategoryContentProps {
@@ -40,6 +41,7 @@ export default function CategoryContent({ categoryName, products }: CategoryCont
               price={product.price}
               imageUrl={product.imageUrl}
               slug={product.slug}
+              categorySlug={product.categorySlug}
             />
           ))
         ) : (

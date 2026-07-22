@@ -33,7 +33,8 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     title: p.title,
     price: p.price,
     imageUrl: p.imageUrl,
-    slug: p.slug
+    slug: p.slug,
+    categorySlug: slug
   }));
 
   return (

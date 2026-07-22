@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Navbar from '../../Navbar';
+import Navbar from '@/app/Navbar';
 import ProductDetailContent from '@/components/ProductDetailContent';
 import { prisma } from '@/lib/prisma';
 
@@ -15,7 +15,7 @@ async function getProductBySlug(slug: string) {
 }
 
 // 2. CODE TẠO THẺ META SEO
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ categorySlug: string, slug: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
   const product = await getProductBySlug(resolvedParams.slug);
   
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 // 3. CODE GIAO DIỆN WEB
-export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProductDetailPage({ params }: { params: Promise<{ categorySlug: string, slug: string }> }) {
   const resolvedParams = await params;
   const product = await getProductBySlug(resolvedParams.slug);
 
