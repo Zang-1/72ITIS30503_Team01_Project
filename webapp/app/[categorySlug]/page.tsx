@@ -1,30 +1,42 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Navbar from '../Navbar';
 import CategoryContent from '@/components/CategoryContent';
 import { prisma } from '@/lib/prisma';
 
 async function getCategoryData(slug: string) {
   const category = await prisma.category.findUnique({
     where: { slug },
+    include: { parent: true, children: true },
   });
-  
+
   if (!category) return null;
 
+  // A parent category shows the products of all of its children as well
+  const childIds = category.children.map((c: (typeof category.children)[number]) => c.id);
   const products = await prisma.product.findMany({
-    where: { categoryId: category.id },
+    where: { categoryId: { in: [category.id, ...childIds] } },
     include: { category: true },
+    orderBy: { id: 'desc' },
   });
 
-  return { category, products };
+  // Sibling list for the sidebar: children if this is a parent,
+  // otherwise the other categories under the same parent.
+  const siblings = category.parentId
+    ? await prisma.category.findMany({ where: { parentId: category.parentId }, orderBy: { id: 'asc' } })
+    : category.children;
+
+  return { category, products, siblings };
 }
 
-// SEO Metadata
-export async function generateMetadata({ params }: { params: Promise<{ categorySlug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ categorySlug: string }>;
+}): Promise<Metadata> {
   const resolvedParams = await params;
   const data = await getCategoryData(resolvedParams.categorySlug);
-  
+
   if (!data) {
     return { title: 'Không tìm thấy danh mục | SportStore' };
   }
@@ -35,33 +47,35 @@ export async function generateMetadata({ params }: { params: Promise<{ categoryS
   };
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ categorySlug: string }> }) {
+export default async function CategoryPage({
+  params,
+}: {
+  params: Promise<{ categorySlug: string }>;
+}) {
   const resolvedParams = await params;
-  const slug = resolvedParams.categorySlug;
-  const data = await getCategoryData(slug);
+  const data = await getCategoryData(resolvedParams.categorySlug);
 
   if (!data) {
     notFound();
   }
 
-  // Serialize data cho client component
-  const serializedProducts = data.products.map(p => ({
+  const serializedProducts = data.products.map((p: (typeof data.products)[number]) => ({
     id: p.id,
     title: p.title,
     price: p.price,
     imageUrl: p.imageUrl,
     slug: p.slug,
-    categorySlug: data.category.slug,
+    categorySlug: p.category.slug,
   }));
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans">
-      <Navbar />
-      <CategoryContent 
-        categoryName={data.category.name}
-        categorySlug={data.category.slug}
-        products={serializedProducts} 
-      />
-    </div>
+    <CategoryContent
+      categoryName={data.category.name}
+      categorySlug={data.category.slug}
+      products={serializedProducts}
+      siblings={data.siblings.map((s: (typeof data.siblings)[number]) => ({ id: s.id, name: s.name, slug: s.slug }))}
+      parentName={data.category.parent?.name ?? null}
+      parentSlug={data.category.parent?.slug ?? null}
+    />
   );
 }

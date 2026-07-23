@@ -12,6 +12,9 @@ interface ProductCardProps {
   imageUrl: string | null;
   slug: string;
   categorySlug: string;
+  /** Optional strike-through original price to show a discount badge */
+  regularPrice?: number | null;
+  badge?: 'new' | 'hot' | null;
 }
 
 // Dictionary dịch tên sản phẩm VN → EN
@@ -42,21 +45,31 @@ function translateTitle(text: string): string {
   return result;
 }
 
-export default function ProductCard({ id, title, price, imageUrl, slug, categorySlug }: ProductCardProps) {
+export default function ProductCard({
+  id,
+  title,
+  price,
+  imageUrl,
+  slug,
+  categorySlug,
+  regularPrice = null,
+  badge = null,
+}: ProductCardProps) {
   const { addToCart } = useCart();
   const { locale, t } = useLanguage();
 
   const displayTitle = locale === 'en' ? translateTitle(title) : title;
+  const href = `/${categorySlug}/${slug}`;
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-    }).format(value);
-  };
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+
+  const hasDiscount = !!regularPrice && regularPrice > price;
+  const percent = hasDiscount ? Math.round(((regularPrice! - price) / regularPrice!) * 100) : 0;
 
   const handleAdd = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigating to detail page if clicking the card
+    e.preventDefault();
+    e.stopPropagation();
     addToCart({
       id,
       title: displayTitle,
@@ -66,48 +79,80 @@ export default function ProductCard({ id, title, price, imageUrl, slug, category
   };
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/40 hover:bg-zinc-900 hover:border-zinc-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-amber-500/5">
-      {/* Product Image */}
-      <Link href={`/${categorySlug}/${slug}`} className="block aspect-square w-full overflow-hidden bg-zinc-950">
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-ink-300 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-accent-500 hover:shadow-[0_10px_28px_-12px_rgba(11,93,138,.35)]">
+      {/* badges */}
+      <div className="pointer-events-none absolute left-0 top-3 z-10 flex flex-col gap-1.5">
+        {hasDiscount && (
+          <span className="rounded-r-md bg-[#dc2626] px-2 py-1 text-[11px] font-bold text-white shadow-sm">
+            -{percent}%
+          </span>
+        )}
+        {badge === 'new' && (
+          <span className="rounded-r-md bg-brand-500 px-2 py-1 text-[11px] font-bold text-white shadow-sm">
+            {t('product_new_badge')}
+          </span>
+        )}
+        {badge === 'hot' && (
+          <span className="rounded-r-md bg-accent-500 px-2 py-1 text-[11px] font-bold text-white shadow-sm">
+            {t('product_hot_badge')}
+          </span>
+        )}
+      </div>
+
+      {/* image */}
+      <Link href={href} className="block aspect-square w-full overflow-hidden bg-ink-50 p-3">
         <img
           src={imageUrl || '/vot-cau-long-yonex.jpg'}
           alt={displayTitle}
-          className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
+          className="h-full w-full rounded-lg object-cover object-center transition-transform duration-500 group-hover:scale-105"
         />
       </Link>
 
-      {/* Product Info */}
-      <div className="flex flex-1 flex-col p-4">
-        <div className="mb-2">
-          <Link href={`/${categorySlug}/${slug}`}>
-            <h3 className="text-sm font-bold text-zinc-100 hover:text-amber-500 line-clamp-2 transition-colors duration-200 min-h-[40px]">
-              {displayTitle}
-            </h3>
-          </Link>
+      {/* body */}
+      <div className="flex flex-1 flex-col p-3.5 pt-2.5">
+        <Link href={href}>
+          <h3 className="ss-line-clamp-2 min-h-[38px] text-[13.5px] font-semibold leading-[1.4] text-ink-900 transition-colors hover:text-accent-600">
+            {displayTitle}
+          </h3>
+        </Link>
+
+        {/* rating placeholder — visual trust signal */}
+        <div className="mt-1.5 flex items-center gap-1 text-accent-500">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <svg key={i} className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10 15.27 16.18 19l-1.64-7.03L20 7.24l-7.19-.61L10 0 7.19 6.63 0 7.24l5.46 4.73L3.82 19z" />
+            </svg>
+          ))}
+          <span className="ml-1 text-[11px] font-medium text-ink-500">(5.0)</span>
         </div>
 
-        <div className="mt-auto flex flex-col gap-3">
-          {/* Price */}
-          <div className="text-base font-black text-amber-500">
-            {formatCurrency(price)}
+        <div className="mt-auto pt-2.5">
+          <div className="flex items-baseline gap-2">
+            <span className="text-[16px] font-extrabold text-[#dc2626]">{formatCurrency(price)}</span>
+            {hasDiscount && (
+              <span className="text-[12px] font-medium text-ink-500 line-through">
+                {formatCurrency(regularPrice!)}
+              </span>
+            )}
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex gap-2">
+          <div className="mt-2.5 flex gap-2">
             <Link
-              href={`/${categorySlug}/${slug}`}
-              className="flex-1 text-center px-3 py-2 border border-zinc-700 rounded-lg text-xs font-semibold text-zinc-300 hover:bg-zinc-800 hover:text-white transition-all"
+              href={href}
+              className="flex-1 rounded-lg border border-ink-300 px-2 py-2 text-center text-[12px] font-semibold text-ink-700 transition-all hover:border-brand-500 hover:text-brand-600"
             >
               {t('product_details')}
             </Link>
             <button
               onClick={handleAdd}
-              className="flex-1 px-3 py-2 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded-lg text-xs tracking-wider transition-all flex items-center justify-center gap-1.5"
+              title={t('product_add_short')}
+              className="flex items-center justify-center gap-1.5 rounded-lg bg-accent-500 px-3 py-2 text-[12px] font-bold text-white transition-all hover:bg-accent-600"
             >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="2.2" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
               </svg>
-              {t('product_add')}
+              <span className="hidden sm:inline">{t('product_add')}</span>
             </button>
           </div>
         </div>

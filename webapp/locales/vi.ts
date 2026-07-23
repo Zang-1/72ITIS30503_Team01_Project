@@ -196,6 +196,115 @@ const vi = {
   footer_about_desc: 'SportStore là hệ thống cửa hàng dụng cụ thể thao hàng đầu Việt Nam, cung cấp sản phẩm chính hãng từ các thương hiệu lớn: Yonex, Victor, Lining, Wilson, Babolat, Head...',
   footer_map_title: 'Bản Đồ Cửa Hàng',
   footer_address_value: '123 Đường Thể Thao, Quận 1, TP. Hồ Chí Minh',
+
+  // ===== Top bar / Header =====
+  topbar_hotline: 'Hotline',
+  topbar_stores: 'Hệ thống cửa hàng',
+  topbar_guide: 'Hướng dẫn mua hàng',
+  topbar_freeship: 'Miễn phí vận chuyển cho đơn từ 5.000.000₫',
+  search_placeholder: 'Bạn cần tìm sản phẩm gì?',
+  search_button: 'Tìm kiếm',
+  search_hot: 'Tìm nhiều nhất',
+  search_title: 'Kết quả tìm kiếm',
+  search_for: 'Từ khoá',
+  search_found: 'sản phẩm phù hợp',
+  search_empty: 'Không tìm thấy sản phẩm nào phù hợp.',
+  search_empty_hint: 'Thử dùng từ khoá ngắn hơn, ví dụ "vợt" hoặc "Yonex".',
+  nav_all_categories: 'Danh mục sản phẩm',
+  nav_shop: 'Cửa hàng',
+  nav_account: 'Tài khoản',
+  nav_cart: 'Giỏ hàng',
+  nav_menu: 'Menu',
+
+  // ===== Policy strip =====
+  policy_ship_title: 'Giao hàng toàn quốc',
+  policy_ship_desc: 'Thanh toán khi nhận hàng',
+  policy_quality_title: 'Cam kết chính hãng',
+  policy_quality_desc: '100% sản phẩm có tem nhãn',
+  policy_pay_title: 'Thanh toán linh hoạt',
+  policy_pay_desc: 'COD hoặc chuyển khoản',
+  policy_return_title: 'Đổi trả trong 14 ngày',
+  policy_return_desc: 'Nếu sản phẩm bị lỗi',
+
+  // ===== Home =====
+  hero_badge: 'Chính hãng · Bảo hành 6 tháng',
+  hero_stat_products: 'Sản phẩm chính hãng',
+  hero_stat_brands: 'Thương hiệu lớn',
+  hero_stat_support: 'Tư vấn kỹ thuật',
+  home_by_sport: 'Mua sắm theo bộ môn',
+  home_view_all: 'Xem tất cả',
+  home_brands: 'Thương hiệu phân phối',
+  home_deal_title: 'Ưu đãi trong tuần',
+  home_deal_desc: 'Nhập mã XUAN2026 giảm ngay 10% cho toàn bộ đơn hàng.',
+  home_deal_cta: 'Mua sắm ngay',
+  home_ship_banner: 'Miễn phí vận chuyển cho đơn hàng từ 5.000.000₫',
+
+  // ===== Product card / badges =====
+  product_in_stock: 'Còn hàng',
+  product_out_of_stock: 'Hết hàng',
+  product_new_badge: 'Mới',
+  product_hot_badge: 'Bán chạy',
+  product_add_short: 'Thêm vào giỏ',
+
+  // ===== Breadcrumb =====
+  breadcrumb_home: 'Trang chủ',
+
+  // ===== Category page =====
+  category_sort_label: 'Sắp xếp',
+  sort_default: 'Mặc định',
+  sort_price_asc: 'Giá thấp → cao',
+  sort_price_desc: 'Giá cao → thấp',
+  sort_name_asc: 'Tên A → Z',
+  category_filter_title: 'Bộ lọc',
+  category_filter_price: 'Khoảng giá',
+  filter_price_all: 'Tất cả mức giá',
+  filter_price_1: 'Dưới 1 triệu',
+  filter_price_2: '1 – 3 triệu',
+  filter_price_3: '3 – 5 triệu',
+  filter_price_4: 'Trên 5 triệu',
+  category_reset: 'Xoá bộ lọc',
+  category_showing: 'Hiển thị',
+  category_products: 'sản phẩm',
+  category_other: 'Danh mục khác',
+
+  // ===== Product detail =====
+  pd_buy_now: 'Mua ngay',
+  pd_advice: 'Cần tư vấn? Gọi',
+  pd_trust_1: 'Cam kết chính hãng 100%',
+  pd_trust_2: 'Bảo hành 6 tháng',
+  pd_trust_3: 'Đổi trả trong 14 ngày',
+  pd_trust_4: 'Giao hàng toàn quốc',
+  pd_tab_desc: 'Mô tả sản phẩm',
+  pd_tab_spec: 'Thông số kỹ thuật',
+  pd_related: 'Sản phẩm liên quan',
+  pd_share: 'Chia sẻ',
+
+  // ===== Account =====
+  account_subtitle: 'Quản lý thông tin và đơn hàng của bạn',
+  account_login: 'Đăng nhập',
+  account_register: 'Đăng ký',
+  account_orders: 'Đơn hàng của tôi',
+  account_wip: 'Tính năng đang được phát triển.',
+
+  // ===== Admin =====
+  admin_title: 'Quản lý đơn hàng',
+  admin_subtitle: 'Bảng điều phối trạng thái đơn hàng',
+  admin_reload: 'Tải lại dữ liệu',
+  admin_loading: 'Đang tải đơn hàng...',
+  admin_empty: 'Chưa có đơn hàng nào',
+  admin_col_pending: 'Chờ duyệt',
+  admin_col_processing: 'Đang xử lý',
+  admin_col_completed: 'Hoàn thành',
+  admin_approve: 'Duyệt đơn',
+  admin_complete: 'Hoàn thành',
+  admin_total_label: 'Tổng thanh toán',
+  admin_payment_label: 'Thanh toán',
+  admin_orders_unit: 'đơn',
+
+  // ===== Contact =====
+  contact_subtitle: 'Chúng tôi luôn sẵn sàng hỗ trợ bạn',
+  contact_hours_title: 'Giờ làm việc',
+  contact_hours: '8:00 - 21:00, tất cả các ngày trong tuần',
 };
 
 export default vi;
