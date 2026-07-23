@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useTransition } from 'react';
-import Navbar from '../Navbar';
 import { getOrdersAction, updateOrderStatusAction } from '@/app/actions/adminActions';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface OrderItem {
   id: number;
@@ -28,18 +28,23 @@ interface Order {
   items: OrderItem[];
 }
 
+const COLUMNS = [
+  { key: 'Pending', tone: 'amber', dot: 'bg-amber-500', bar: 'bg-amber-500', text: 'text-amber-700', soft: 'bg-amber-50' },
+  { key: 'Processing', tone: 'blue', dot: 'bg-blue-500', bar: 'bg-blue-500', text: 'text-blue-700', soft: 'bg-blue-50' },
+  { key: 'Completed', tone: 'emerald', dot: 'bg-emerald-500', bar: 'bg-emerald-500', text: 'text-emerald-700', soft: 'bg-emerald-50' },
+] as const;
+
 export default function AdminPage() {
+  const { t } = useLanguage();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
 
-  // Load orders
   const loadOrders = async () => {
     setLoading(true);
     const result = await getOrdersAction();
     if (result.success && result.orders) {
-      // Cast because of Date serialization
       setOrders(result.orders as unknown as Order[]);
     } else {
       setError(result.error || 'Không thể tải danh sách đơn hàng.');
@@ -58,233 +63,137 @@ export default function AdminPage() {
     } else if (currentStatus === 'Processing') {
       nextStatus = 'Completed';
     } else {
-      return; // Completed is the final state
+      return;
     }
 
     startTransition(async () => {
       const result = await updateOrderStatusAction(orderId, nextStatus);
       if (result.success) {
-        // Update local state to trigger smooth UI movement
-        setOrders((prevOrders) =>
-          prevOrders.map((ord) => (ord.id === orderId ? { ...ord, status: nextStatus } : ord))
-        );
+        setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: nextStatus } : o)));
       } else {
-        alert(result.error || 'Không thể cập nhật trạng thái đơn hàng.');
+        setError(result.error || 'Không thể cập nhật trạng thái.');
       }
     });
   };
 
-  // Group orders by status
-  const pendingOrders = orders.filter((o) => o.status === 'Pending');
-  const processingOrders = orders.filter((o) => o.status === 'Processing');
-  const completedOrders = orders.filter((o) => o.status === 'Completed');
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-    }).format(value);
-  };
+  const labelFor = (key: string) =>
+    key === 'Pending' ? t('admin_col_pending') : key === 'Processing' ? t('admin_col_processing') : t('admin_col_completed');
 
-  const formatDate = (dateVal: Date | string) => {
-    const d = new Date(dateVal);
-    return d.toLocaleString('vi-VN', {
-      hour: '2-digit',
-      minute: '2-digit',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-  };
-
-  const renderOrderCard = (order: Order) => (
-    <div
-      key={order.id}
-      className="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-4 hover:border-zinc-700 transition-all duration-300 shadow-lg animate-fade-in group"
-    >
-      {/* Order Header */}
-      <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
-        <div>
-          <span className="text-xs font-bold text-amber-500 tracking-wider">#{order.id}</span>
-          <p className="text-[10px] text-zinc-500 mt-0.5">{formatDate(order.createdAt)}</p>
-        </div>
-        <span
-          className={`px-2 py-0.5 text-[10px] font-black rounded-full border ${
-            order.status === 'Pending'
-              ? 'bg-amber-950/60 text-amber-400 border-amber-800/80'
-              : order.status === 'Processing'
-              ? 'bg-blue-950/60 text-blue-400 border-blue-800/80'
-              : 'bg-emerald-950/60 text-emerald-400 border-emerald-800/80'
-          }`}
-        >
-          {order.status === 'Pending' && 'Chờ duyệt'}
-          {order.status === 'Processing' && 'Đang xử lý'}
-          {order.status === 'Completed' && 'Đã xong'}
-        </span>
-      </div>
-
-      {/* Customer Info */}
-      <div className="text-xs space-y-1">
-        <h4 className="font-bold text-white text-sm group-hover:text-amber-500 transition-colors">{order.customerName}</h4>
-        <p className="text-zinc-400">📞 {order.phone}</p>
-        <p className="text-zinc-400">📧 {order.email}</p>
-        <p className="text-zinc-400">📍 {order.address}</p>
-      </div>
-
-      {/* Payment Method */}
-      <div className="flex items-center justify-between text-xs bg-zinc-950/60 p-2 rounded-lg border border-zinc-850">
-        <span className="text-zinc-500">Thanh toán:</span>
-        <span className={`font-semibold ${order.paymentMethod === 'Bank Transfer' ? 'text-amber-400' : 'text-zinc-300'}`}>
-          {order.paymentMethod === 'Bank Transfer' ? '🏦 Chuyển khoản' : '💵 Tiền mặt (COD)'}
-        </span>
-      </div>
-
-      {/* Products list */}
-      <div className="space-y-2 border-t border-b border-zinc-800/60 py-3 text-xs">
-        <p className="font-semibold text-zinc-400 uppercase tracking-wider text-[10px]">Sản phẩm:</p>
-        <div className="space-y-1.5 max-h-32 overflow-y-auto pr-1">
-          {order.items.map((item) => (
-            <div key={item.id} className="flex justify-between items-start text-zinc-300">
-              <span className="truncate pr-4">{item.product?.title || 'Sản phẩm'} <strong className="text-amber-500">x{item.quantity}</strong></span>
-              <span className="whitespace-nowrap font-medium">{formatCurrency(item.price * item.quantity)}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Footer (Total and CTA button) */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-1">
-        <div>
-          <span className="text-[10px] text-zinc-500 block">Tổng thanh toán:</span>
-          <strong className="text-base text-amber-500 font-black">{formatCurrency(order.total)}</strong>
-        </div>
-
-        {order.status !== 'Completed' && (
-          <button
-            onClick={() => handleStatusChange(order.id, order.status)}
-            disabled={isPending}
-            className={`px-4 py-2 text-xs font-bold rounded-lg transition-all duration-300 shadow-md ${
-              order.status === 'Pending'
-                ? 'bg-amber-600 hover:bg-amber-500 text-white'
-                : 'bg-emerald-600 hover:bg-emerald-500 text-white'
-            }`}
-          >
-            {order.status === 'Pending' ? 'Duyệt đơn ➔' : 'Hoàn thành ➔'}
-          </button>
-        )}
-      </div>
-    </div>
-  );
+  const actionFor = (key: string) =>
+    key === 'Pending' ? t('admin_approve') : key === 'Processing' ? t('admin_complete') : null;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col">
-      <Navbar />
-
-      <main className="flex-1 mx-auto max-w-7xl w-full px-6 py-10">
-        {/* Header Section */}
-        <div className="mb-8 border-b border-zinc-850 pb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-black tracking-tight text-white uppercase flex items-center gap-2">
-              🛡️ Quản trị <span className="text-amber-500">SportStore</span>
-            </h1>
-            <p className="text-xs text-zinc-500 mt-1">
-              Hệ thống xử lý đơn hàng B2C - Cầu lông & Tennis
-            </p>
-          </div>
-          <button
-            onClick={loadOrders}
-            className="px-4 py-2 bg-zinc-900 border border-zinc-800 text-xs font-bold rounded-lg text-zinc-300 hover:bg-zinc-800 hover:text-white transition-all flex items-center gap-2"
-          >
-            🔄 Tải lại dữ liệu
-          </button>
+    <div className="ss-container py-6">
+      {/* header */}
+      <div className="ss-card mb-5 flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+        <div>
+          <h1 className="text-[21px] font-extrabold text-ink-900 md:text-[24px]">{t('admin_title')}</h1>
+          <p className="mt-0.5 text-[13px] text-ink-500">{t('admin_subtitle')}</p>
         </div>
+        <button
+          onClick={loadOrders}
+          disabled={loading || isPending}
+          className="flex items-center gap-2 rounded-lg border border-ink-300 px-4 py-2.5 text-[13px] font-semibold text-ink-700 transition-colors hover:border-brand-500 hover:text-brand-600 disabled:opacity-60"
+        >
+          <svg className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+          </svg>
+          {t('admin_reload')}
+        </button>
+      </div>
 
-        {error && (
-          <div className="p-4 bg-red-950/60 border border-red-800 rounded-xl text-red-200 text-sm mb-6 max-w-md">
-            ⚠️ {error}
-          </div>
-        )}
+      {error && (
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[13.5px] font-medium text-[#b91c1c]">
+          {error}
+        </div>
+      )}
 
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 text-zinc-500 space-y-3">
-            <svg className="animate-spin h-8 w-8 text-amber-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span className="text-xs font-semibold uppercase tracking-wider">Đang tải danh sách đơn hàng...</span>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-            
-            {/* COLUMN 1: Pending */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between border-b border-amber-950/60 pb-2">
-                <h3 className="font-bold text-sm text-zinc-300 uppercase tracking-wider flex items-center gap-2">
-                  <span>🟡 Chờ duyệt</span>
-                  <span className="bg-amber-950/80 text-amber-400 text-[10px] px-2 py-0.5 rounded-full border border-amber-850 font-black">
-                    {pendingOrders.length}
+      {loading ? (
+        <div className="ss-card grid place-items-center gap-3 py-20 text-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-ink-300 border-t-accent-500" />
+          <p className="text-[14px] text-ink-500">{t('admin_loading')}</p>
+        </div>
+      ) : (
+        <div className="grid gap-4 lg:grid-cols-3">
+          {COLUMNS.map((col) => {
+            const list = orders.filter((o) => o.status === col.key);
+            return (
+              <section key={col.key} className="ss-card overflow-hidden">
+                <header className="flex items-center justify-between border-b border-ink-300 px-4 py-3">
+                  <h2 className="flex items-center gap-2 text-[14px] font-bold text-ink-900">
+                    <span className={`h-2.5 w-2.5 rounded-full ${col.dot}`} />
+                    {labelFor(col.key)}
+                  </h2>
+                  <span className={`rounded-full ${col.soft} ${col.text} px-2.5 py-0.5 text-[12px] font-bold`}>
+                    {list.length} {t('admin_orders_unit')}
                   </span>
-                </h3>
-              </div>
-              
-              {pendingOrders.length === 0 ? (
-                <div className="text-center py-10 border border-dashed border-zinc-900 rounded-2xl text-zinc-600 text-xs">
-                  Không có đơn hàng nào chờ duyệt.
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {pendingOrders.map(renderOrderCard)}
-                </div>
-              )}
-            </div>
+                </header>
 
-            {/* COLUMN 2: Processing */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between border-b border-blue-950/60 pb-2">
-                <h3 className="font-bold text-sm text-zinc-300 uppercase tracking-wider flex items-center gap-2">
-                  <span>🔵 Đang xử lý</span>
-                  <span className="bg-blue-950/80 text-blue-400 text-[10px] px-2 py-0.5 rounded-full border border-blue-850 font-black">
-                    {processingOrders.length}
-                  </span>
-                </h3>
-              </div>
+                <div className="max-h-[70vh] space-y-3 overflow-y-auto bg-ink-50 p-3">
+                  {list.length === 0 && (
+                    <p className="rounded-lg border border-dashed border-ink-300 py-8 text-center text-[13px] text-ink-500">
+                      {t('admin_empty')}
+                    </p>
+                  )}
 
-              {processingOrders.length === 0 ? (
-                <div className="text-center py-10 border border-dashed border-zinc-900 rounded-2xl text-zinc-600 text-xs">
-                  Không có đơn hàng nào đang xử lý.
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {processingOrders.map(renderOrderCard)}
-                </div>
-              )}
-            </div>
+                  {list.map((order) => (
+                    <article key={order.id} className="overflow-hidden rounded-xl border border-ink-300 bg-white">
+                      <div className={`h-1 w-full ${col.bar}`} />
+                      <div className="p-3.5">
+                        <div className="flex items-start justify-between gap-2">
+                          <span className="font-mono text-[13px] font-bold text-brand-600">#{order.id}</span>
+                          <span className="text-[11.5px] text-ink-500">
+                            {new Date(order.createdAt).toLocaleString('vi-VN')}
+                          </span>
+                        </div>
 
-            {/* COLUMN 3: Completed */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between border-b border-emerald-950/60 pb-2">
-                <h3 className="font-bold text-sm text-zinc-300 uppercase tracking-wider flex items-center gap-2">
-                  <span>🟢 Đã hoàn thành</span>
-                  <span className="bg-emerald-950/80 text-emerald-400 text-[10px] px-2 py-0.5 rounded-full border border-emerald-850 font-black">
-                    {completedOrders.length}
-                  </span>
-                </h3>
-              </div>
+                        <div className="mt-2.5 space-y-0.5 text-[12.5px] text-ink-700">
+                          <p className="font-bold text-ink-900">{order.customerName}</p>
+                          <p>{order.phone} · {order.email}</p>
+                          <p className="ss-line-clamp-2">{order.address}</p>
+                          <p className="pt-1">
+                            <span className="rounded bg-ink-100 px-2 py-0.5 text-[11.5px] font-semibold text-ink-700">
+                              {t('admin_payment_label')}: {order.paymentMethod}
+                            </span>
+                          </p>
+                        </div>
 
-              {completedOrders.length === 0 ? (
-                <div className="text-center py-10 border border-dashed border-zinc-900 rounded-2xl text-zinc-600 text-xs">
-                  Chưa có đơn hàng nào hoàn thành.
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {completedOrders.map(renderOrderCard)}
-                </div>
-              )}
-            </div>
+                        <ul className="mt-2.5 max-h-28 space-y-1.5 overflow-y-auto border-t border-ink-300 pt-2.5">
+                          {order.items.map((it) => (
+                            <li key={it.id} className="flex items-center justify-between gap-2 text-[12px]">
+                              <span className="ss-line-clamp-2 flex-1 text-ink-700">{it.product?.title ?? `#${it.productId}`}</span>
+                              <span className="shrink-0 text-ink-500">×{it.quantity}</span>
+                              <span className="shrink-0 font-semibold text-ink-900">{formatCurrency(it.price)}</span>
+                            </li>
+                          ))}
+                        </ul>
 
-          </div>
-        )}
-      </main>
+                        <div className="mt-2.5 flex items-center justify-between border-t border-ink-300 pt-2.5">
+                          <span className="text-[12px] text-ink-500">{t('admin_total_label')}</span>
+                          <span className="text-[15px] font-extrabold text-[#dc2626]">{formatCurrency(order.total)}</span>
+                        </div>
+
+                        {actionFor(col.key) && (
+                          <button
+                            onClick={() => handleStatusChange(order.id, order.status)}
+                            disabled={isPending}
+                            className="mt-3 w-full rounded-lg bg-accent-500 py-2.5 text-[12.5px] font-bold text-white transition-colors hover:bg-accent-600 disabled:cursor-not-allowed disabled:opacity-60"
+                          >
+                            {actionFor(col.key)} →
+                          </button>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

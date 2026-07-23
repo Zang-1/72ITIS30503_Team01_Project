@@ -196,6 +196,115 @@ const en = {
   footer_about_desc: 'SportStore is Vietnam\'s leading sports equipment retailer, providing authentic products from top brands: Yonex, Victor, Lining, Wilson, Babolat, Head...',
   footer_map_title: 'Store Location',
   footer_address_value: '123 Sport Street, District 1, Ho Chi Minh City',
+
+  // ===== Top bar / Header =====
+  topbar_hotline: 'Hotline',
+  topbar_stores: 'Store locations',
+  topbar_guide: 'Buying guide',
+  topbar_freeship: 'Free shipping on orders from 5,000,000₫',
+  search_placeholder: 'What are you looking for?',
+  search_button: 'Search',
+  search_hot: 'Trending',
+  search_title: 'Search results',
+  search_for: 'Keyword',
+  search_found: 'matching products',
+  search_empty: 'No products matched your search.',
+  search_empty_hint: 'Try a shorter keyword, for example "racket" or "Yonex".',
+  nav_all_categories: 'All categories',
+  nav_shop: 'Shop',
+  nav_account: 'Account',
+  nav_cart: 'Cart',
+  nav_menu: 'Menu',
+
+  // ===== Policy strip =====
+  policy_ship_title: 'Nationwide delivery',
+  policy_ship_desc: 'Cash on delivery available',
+  policy_quality_title: '100% authentic',
+  policy_quality_desc: 'Every item is brand-sealed',
+  policy_pay_title: 'Flexible payment',
+  policy_pay_desc: 'COD or bank transfer',
+  policy_return_title: '14-day returns',
+  policy_return_desc: 'If the product is faulty',
+
+  // ===== Home =====
+  hero_badge: 'Authentic · 6-month warranty',
+  hero_stat_products: 'Authentic products',
+  hero_stat_brands: 'Major brands',
+  hero_stat_support: 'Technical advice',
+  home_by_sport: 'Shop by sport',
+  home_view_all: 'View all',
+  home_brands: 'Brands we carry',
+  home_deal_title: 'Deal of the week',
+  home_deal_desc: 'Use code XUAN2026 for 10% off your entire order.',
+  home_deal_cta: 'Shop now',
+  home_ship_banner: 'Free shipping on orders from 5,000,000₫',
+
+  // ===== Product card / badges =====
+  product_in_stock: 'In stock',
+  product_out_of_stock: 'Out of stock',
+  product_new_badge: 'New',
+  product_hot_badge: 'Best seller',
+  product_add_short: 'Add to cart',
+
+  // ===== Breadcrumb =====
+  breadcrumb_home: 'Home',
+
+  // ===== Category page =====
+  category_sort_label: 'Sort by',
+  sort_default: 'Default',
+  sort_price_asc: 'Price: low to high',
+  sort_price_desc: 'Price: high to low',
+  sort_name_asc: 'Name: A to Z',
+  category_filter_title: 'Filters',
+  category_filter_price: 'Price range',
+  filter_price_all: 'All prices',
+  filter_price_1: 'Under 1M',
+  filter_price_2: '1M – 3M',
+  filter_price_3: '3M – 5M',
+  filter_price_4: 'Over 5M',
+  category_reset: 'Clear filters',
+  category_showing: 'Showing',
+  category_products: 'products',
+  category_other: 'Other categories',
+
+  // ===== Product detail =====
+  pd_buy_now: 'Buy now',
+  pd_advice: 'Need advice? Call',
+  pd_trust_1: '100% authentic guarantee',
+  pd_trust_2: '6-month warranty',
+  pd_trust_3: '14-day returns',
+  pd_trust_4: 'Nationwide delivery',
+  pd_tab_desc: 'Description',
+  pd_tab_spec: 'Specifications',
+  pd_related: 'Related products',
+  pd_share: 'Share',
+
+  // ===== Account =====
+  account_subtitle: 'Manage your details and orders',
+  account_login: 'Sign in',
+  account_register: 'Sign up',
+  account_orders: 'My orders',
+  account_wip: 'This feature is under development.',
+
+  // ===== Admin =====
+  admin_title: 'Order management',
+  admin_subtitle: 'Order status coordination board',
+  admin_reload: 'Reload data',
+  admin_loading: 'Loading orders...',
+  admin_empty: 'No orders yet',
+  admin_col_pending: 'Pending',
+  admin_col_processing: 'Processing',
+  admin_col_completed: 'Completed',
+  admin_approve: 'Approve',
+  admin_complete: 'Complete',
+  admin_total_label: 'Order total',
+  admin_payment_label: 'Payment',
+  admin_orders_unit: 'orders',
+
+  // ===== Contact =====
+  contact_subtitle: 'We are always ready to help',
+  contact_hours_title: 'Opening hours',
+  contact_hours: '8:00 - 21:00, seven days a week',
 };
 
 export default en;

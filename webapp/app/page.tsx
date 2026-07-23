@@ -1,25 +1,24 @@
-import Navbar from './Navbar';
 import { prisma } from '../lib/prisma';
 import HomeContent from '../components/HomeContent';
+import { getCategoryTree } from '@/lib/categories';
 
 export default async function HomePage() {
-  // Fetch Latest Arrivals
   const latestProducts = await prisma.product.findMany({
     orderBy: { id: 'desc' },
-    take: 4,
-    include: { category: true }
+    take: 8,
+    include: { category: true },
   });
 
-  // Fetch Premium Products (Sản phẩm đắt nhất)
   const premiumProducts = await prisma.product.findMany({
     orderBy: { price: 'desc' },
-    take: 4,
-    include: { category: true }
+    take: 8,
+    include: { category: true },
   });
 
-  // Serialize products for the client component
+  const sportGroups = await getCategoryTree();
+
   const serializeProducts = (products: typeof latestProducts) =>
-    products.map(p => ({
+    products.map((p: (typeof latestProducts)[number]) => ({
       id: p.id,
       title: p.title,
       price: p.price,
@@ -29,12 +28,10 @@ export default async function HomePage() {
     }));
 
   return (
-    <>
-      <Navbar />
-      <HomeContent
-        latestProducts={serializeProducts(latestProducts)}
-        premiumProducts={serializeProducts(premiumProducts)}
-      />
-    </>
+    <HomeContent
+      latestProducts={serializeProducts(latestProducts)}
+      premiumProducts={serializeProducts(premiumProducts)}
+      sportGroups={sportGroups}
+    />
   );
 }

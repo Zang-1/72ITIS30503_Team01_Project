@@ -1,17 +1,15 @@
 'use client';
 
-import Navbar from '@/app/Navbar';
+import InfoPage from '@/components/InfoPage';
+import { useLanguage } from '@/context/LanguageContext';
 
-export default function Page() {
+export default function AboutPage() {
+  const { t } = useLanguage();
   return (
-    <>
-      <Navbar />
-      <div className="max-w-4xl mx-auto py-12 px-6">
-        <h1 className="text-3xl font-bold mb-8 text-orange-500">Giới Thiệu</h1>
-        <div className="space-y-4 text-gray-300 leading-relaxed">
-          <p>SportStore là hệ thống cửa hàng cung cấp dụng cụ thể thao uy tín hàng đầu. Chúng tôi cam kết mang đến những sản phẩm chất lượng nhất phục vụ niềm đam mê thể thao của bạn.</p>
-        </div>
-      </div>
-    </>
+    <InfoPage
+      title={t('nav_about')}
+      paragraphs={[t('footer_about_desc')]}
+      bullets={[t('pd_trust_1'), t('pd_trust_2'), t('pd_trust_3'), t('pd_trust_4')]}
+    />
   );
 }
