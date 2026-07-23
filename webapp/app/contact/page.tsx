@@ -4,7 +4,7 @@ import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import Breadcrumb from '@/components/Breadcrumb';
 
-const HOTLINE = '1900 6969 39';
+const HOTLINE = '0364888253';
 
 export default function ContactPage() {
   const { t } = useLanguage();
@@ -101,7 +101,6 @@ export default function ContactPage() {
               referrerPolicy="no-referrer-when-downgrade"
               title="SportStore Location"
             />
-          </div>
         </div>
       </div>
     </>
