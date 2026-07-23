@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 
-const HOTLINE = '1900 6969 39';
+const HOTLINE = '0364888253';
 
 export default function Footer() {
   const { t } = useLanguage();
