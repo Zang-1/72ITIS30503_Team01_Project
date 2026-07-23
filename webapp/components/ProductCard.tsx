@@ -14,9 +14,39 @@ interface ProductCardProps {
   categorySlug: string;
 }
 
+// Dictionary dịch tên sản phẩm VN → EN
+const viToEnMap: Record<string, string> = {
+  'Vợt Cầu Lông': 'Badminton Racket',
+  'Vợt Tennis': 'Tennis Racket',
+  'Vợt Pickleball': 'Pickleball Paddle',
+  'Giày Cầu Lông': 'Badminton Shoes',
+  'Giày Tennis': 'Tennis Shoes',
+  'Quấn Cán Vợt': 'Racket Grip Tape',
+  'Ống Cầu Lông': 'Shuttlecock Tube',
+  'Bao Vợt': 'Racket Bag',
+  'Bóng Tennis': 'Tennis Ball',
+  'Bóng Pickleball': 'Pickleball Ball',
+  'Dây Căng Vợt': 'Racket String',
+  'Chính Hãng': 'Authentic',
+  'Cao Cấp': 'Premium',
+  'Tiêu Chuẩn Thi Đấu': 'Tournament Standard',
+  'Chống Trơn': 'Anti-Slip',
+};
+
+function translateTitle(text: string): string {
+  let result = text;
+  const sortedKeys = Object.keys(viToEnMap).sort((a, b) => b.length - a.length);
+  for (const vi of sortedKeys) {
+    result = result.replaceAll(vi, viToEnMap[vi]);
+  }
+  return result;
+}
+
 export default function ProductCard({ id, title, price, imageUrl, slug, categorySlug }: ProductCardProps) {
   const { addToCart } = useCart();
-  const { t } = useLanguage();
+  const { locale, t } = useLanguage();
+
+  const displayTitle = locale === 'en' ? translateTitle(title) : title;
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -29,7 +59,7 @@ export default function ProductCard({ id, title, price, imageUrl, slug, category
     e.preventDefault(); // Prevent navigating to detail page if clicking the card
     addToCart({
       id,
-      title,
+      title: displayTitle,
       price,
       imageUrl: imageUrl || '/vot-cau-long-yonex.jpg',
     });
@@ -41,7 +71,7 @@ export default function ProductCard({ id, title, price, imageUrl, slug, category
       <Link href={`/product/${categorySlug}/${slug}`} className="block aspect-square w-full overflow-hidden bg-zinc-950">
         <img
           src={imageUrl || '/vot-cau-long-yonex.jpg'}
-          alt={title}
+          alt={displayTitle}
           className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
         />
       </Link>
@@ -51,7 +81,7 @@ export default function ProductCard({ id, title, price, imageUrl, slug, category
         <div className="mb-2">
           <Link href={`/product/${categorySlug}/${slug}`}>
             <h3 className="text-sm font-bold text-zinc-100 hover:text-amber-500 line-clamp-2 transition-colors duration-200 min-h-[40px]">
-              {title}
+              {displayTitle}
             </h3>
           </Link>
         </div>

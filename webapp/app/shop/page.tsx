@@ -40,7 +40,7 @@ export default function ShopPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '40px', justifyContent: 'center' }}>
           {categories.map((cat) => (
             <Link 
-              href={`/category/${cat.slug}`} 
+              href={`/${cat.slug}`} 
               key={cat.id}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >

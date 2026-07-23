@@ -191,6 +191,11 @@ const vi = {
   footer_connect: 'Kết Nối Với Chúng Tôi',
   footer_payment: 'Phương Thức Thanh Toán',
   footer_copyright_text: '© 2026 SportStore. Nâng tầm đam mê. Được xây dựng cho cộng đồng thể thao Việt Nam.',
+  footer_hotline_label: 'Hotline',
+  footer_everyday: 'Tất cả các ngày',
+  footer_about_desc: 'SportStore là hệ thống cửa hàng dụng cụ thể thao hàng đầu Việt Nam, cung cấp sản phẩm chính hãng từ các thương hiệu lớn: Yonex, Victor, Lining, Wilson, Babolat, Head...',
+  footer_map_title: 'Bản Đồ Cửa Hàng',
+  footer_address_value: '123 Đường Thể Thao, Quận 1, TP. Hồ Chí Minh',
 };
 
 export default vi;
