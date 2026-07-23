@@ -123,10 +123,10 @@ export default function Footer() {
             </h3>
             <div className="flex gap-2.5">
               {[
-                { label: 'Facebook', href: 'https://facebook.com', c: '#1877F2' },
-                { label: 'YouTube', href: 'https://youtube.com', c: '#FF0000' },
-                { label: 'TikTok', href: 'https://tiktok.com', c: '#FFFFFF' },
-                { label: 'Zalo', href: 'https://zalo.me', c: '#0068FF' },
+                { label: 'Facebook', href: 'https://www.facebook.com/gain.baor', c: '#1877F2' },
+                { label: 'YouTube', href: 'https://www.youtube.com/@file', c: '#FF0000' },
+                { label: 'TikTok', href: 'https://www.tiktok.com/@shopvnbsports', c: '#FFFFFF' },
+                { label: 'Zalo', href: 'https://zalo.me/0364888253', c: '#0068FF' },
               ].map((s) => (
                 <a
                   key={s.label}
