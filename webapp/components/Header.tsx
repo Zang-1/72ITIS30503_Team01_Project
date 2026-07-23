@@ -299,13 +299,6 @@ export default function Header({ categories }: { categories: NavParent[] }) {
               </Link>
             ))}
           </nav>
-
-          <Link
-            href="/admin"
-            className="ml-auto hidden rounded-md border border-ink-300 px-3 py-1.5 text-[12px] font-semibold text-ink-500 hover:border-brand-500 hover:text-brand-600 md:block"
-          >
-            Admin
-          </Link>
         </div>
       </div>
 
@@ -340,9 +333,6 @@ export default function Header({ categories }: { categories: NavParent[] }) {
                 </Link>
                 <Link href="/account" className="block rounded px-3 py-2.5 text-[14px] font-semibold text-ink-900 hover:bg-ink-50">
                   {t('nav_account')}
-                </Link>
-                <Link href="/admin" className="block rounded px-3 py-2.5 text-[14px] font-semibold text-ink-500 hover:bg-ink-50">
-                  Admin
                 </Link>
               </div>
             </nav>
