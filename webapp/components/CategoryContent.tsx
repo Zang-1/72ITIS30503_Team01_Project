@@ -15,6 +15,7 @@ interface Product {
 
 interface CategoryContentProps {
   categoryName: string;
+  categorySlug: string;
   products: Product[];
 }
 
@@ -36,7 +37,7 @@ const categoryNameMap: Record<string, string> = {
   'Pickleball': 'Pickleball',
 };
 
-export default function CategoryContent({ categoryName, products }: CategoryContentProps) {
+export default function CategoryContent({ categoryName, categorySlug, products }: CategoryContentProps) {
   const { locale, t } = useLanguage();
 
   const displayCategoryName = locale === 'en' 

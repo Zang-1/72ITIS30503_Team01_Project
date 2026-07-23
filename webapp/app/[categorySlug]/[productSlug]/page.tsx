@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ categoryS
 
   return {
     title: `${product.title} | SportStore`,
-    description: product.description.substring(0, 160),
+    description: (product.description || '').substring(0, 160),
   };
 }
 
@@ -52,7 +52,7 @@ export default async function ProductPage({ params }: { params: Promise<{ catego
         name={product.title}
         price={product.price}
         imageFile={product.imageUrl || '/vot-cau-long-yonex.jpg'}
-        content={product.description}
+        content={product.description || ''}
         specifications={product.specifications || ''}
       />
     </div>
