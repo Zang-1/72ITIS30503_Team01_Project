@@ -28,7 +28,7 @@ export default function ContactPage() {
 
           <div>
             <h2 className="text-2xl font-bold text-white mb-2">{t('contact_hotline_title')}</h2>
-            <p className="text-gray-400">+84 123 456 789</p>
+            <p className="text-gray-400">0364888253</p>
           </div>
 
           <div>

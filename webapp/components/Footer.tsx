@@ -60,7 +60,7 @@ export default function Footer() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
                   </svg>
                 </span>
-                <span><strong className="text-gray-200">{t('footer_phone')}:</strong> +84 123 456 789</span>
+                <span><strong className="text-gray-200">{t('footer_phone')}:</strong> 0364888253</span>
               </p>
               <p className="flex items-center gap-2.5">
                 <span className="text-orange-500 shrink-0">
@@ -134,16 +134,16 @@ export default function Footer() {
             <div>
               <h3 className="text-lg font-bold text-orange-500 mb-3">{t('footer_connect')}</h3>
               <div className="flex gap-3">
-                <a href="https://facebook.com" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-[#1877F2]/20 border border-[#1877F2]/30 flex items-center justify-center hover:bg-[#1877F2] hover:border-[#1877F2] transition-all duration-300 group" aria-label="Facebook">
+                <a href="https://www.facebook.com/gain.baor" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-[#1877F2]/20 border border-[#1877F2]/30 flex items-center justify-center hover:bg-[#1877F2] hover:border-[#1877F2] transition-all duration-300 group" aria-label="Facebook">
                   <svg className="w-4 h-4 text-[#1877F2] group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                 </a>
-                <a href="https://youtube.com" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-[#FF0000]/20 border border-[#FF0000]/30 flex items-center justify-center hover:bg-[#FF0000] hover:border-[#FF0000] transition-all duration-300 group" aria-label="YouTube">
+                <a href="https://www.youtube.com/@file" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-[#FF0000]/20 border border-[#FF0000]/30 flex items-center justify-center hover:bg-[#FF0000] hover:border-[#FF0000] transition-all duration-300 group" aria-label="YouTube">
                   <svg className="w-4 h-4 text-[#FF0000] group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                 </a>
-                <a href="https://tiktok.com" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white hover:border-white transition-all duration-300 group" aria-label="TikTok">
+                <a href="https://www.tiktok.com/@shopvnbsports" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white hover:border-white transition-all duration-300 group" aria-label="TikTok">
                   <svg className="w-4 h-4 text-white group-hover:text-black transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
                 </a>
-                <a href="https://zalo.me" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-[#0068FF]/20 border border-[#0068FF]/30 flex items-center justify-center hover:bg-[#0068FF] hover:border-[#0068FF] transition-all duration-300 group" aria-label="Zalo">
+                <a href="https://zalo.me/0364888253" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-[#0068FF]/20 border border-[#0068FF]/30 flex items-center justify-center hover:bg-[#0068FF] hover:border-[#0068FF] transition-all duration-300 group" aria-label="Zalo">
                   <span className="text-xs font-black text-[#0068FF] group-hover:text-white transition-colors">Z</span>
                 </a>
               </div>
